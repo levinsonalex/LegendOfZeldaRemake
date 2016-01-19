@@ -12,6 +12,8 @@ public class Tile : MonoBehaviour {
 
     private SpriteRenderer  sprend;
 
+    public 
+
 	void Awake() {
         if (spriteArray == null) {
             spriteArray = Resources.LoadAll<Sprite>(spriteTexture.name);
@@ -64,14 +66,24 @@ public class Tile : MonoBehaviour {
 		bc.enabled = true;
 		char c = ShowMapOnCamera.S.collisionS[tileNum];
 		switch (c) {
-			case 'L': // Left Door
-			case 'R': // Right door
-				bc.isTrigger = true;
-				goto case 'S';
 			case 'S': // Solid
 				bc.center = Vector3.zero;
 				bc.size = Vector3.one;
 				break;
+            case 'P': //Pushable
+                if (bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_74")
+                {
+                    print("WTF");
+                    break;
+                }
+                else
+                {
+                    print(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name);
+                    bc.center = Vector3.zero;
+                    bc.size = Vector3.one;
+                    bc.gameObject.tag = "Pushable";
+                    break;
+                }
 			default:
 				bc.enabled = false;
 				break;

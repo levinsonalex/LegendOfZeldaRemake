@@ -148,8 +148,28 @@ public class PlayerControl : MonoBehaviour {
 				doorTouch = false;
 			}
 		}
-		//Locked Door Up
-		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_80" || coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_81")
+        //Locked Door Right
+        else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_101")
+        {
+            if(key_count > 0)
+            {
+                coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
+                coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                key_count--;
+            }
+        }
+        //Locked Door Left
+        else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_106")
+        {
+            if (key_count > 0)
+            {
+                coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[51];
+                coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                key_count--;
+            }
+        }
+        //Locked Door Up
+        else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_80" || coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_81")
 		{
 			if (doorTouch)
 			{
@@ -180,7 +200,11 @@ public class PlayerControl : MonoBehaviour {
 			doorTouch = true;
 			firstTouch = coll.gameObject;
 		}
-		else
+        else if (coll.gameObject.CompareTag("Pushable"))
+        {
+            print("PUSHABLE BABY!: " + coll.gameObject.GetComponent<SpriteRenderer>().sprite.name);
+        }
+        else
 		{
 			print(coll.collider.name);
 			doorTouch = false;
