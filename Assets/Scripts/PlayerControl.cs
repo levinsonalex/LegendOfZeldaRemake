@@ -57,27 +57,35 @@ public class PlayerControl : MonoBehaviour {
 			Destroy(coll.gameObject);
 			rupee_count++;
 		}
-		//Left Door
-		else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_51")
+		else
 		{
-			Vector3 trans = new Vector3(- ShowMapOnCamera.S.screenSize.x, 0, 0);
+			print(coll.name);
+		}
+	}
+
+	void OnCollisionEnter(Collision coll)
+	{
+		//Left Door
+		if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_50")
+		{
+			Vector3 trans = new Vector3(-ShowMapOnCamera.S.screenSize.x, 0, 0);
 			ShowMapOnCamera.S.transform.Translate(trans);
 			Vector3 leftDoorExit = instance.GetComponent<Transform>().position;
-			leftDoorExit.x = ShowMapOnCamera.S.transform.position.x + 5;
+			leftDoorExit.x = ShowMapOnCamera.S.transform.position.x + 6;
 			instance.GetComponent<Transform>().position = leftDoorExit;
 		}
-		//Left Door
-		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_48")
+		//Right Door
+		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_49")
 		{
 			Vector3 trans = new Vector3(ShowMapOnCamera.S.screenSize.x, 0, 0);
 			ShowMapOnCamera.S.transform.Translate(trans);
 			Vector3 rightDoorExit = instance.GetComponent<Transform>().position;
-			rightDoorExit.x = ShowMapOnCamera.S.transform.position.x - 5;
+			rightDoorExit.x = ShowMapOnCamera.S.transform.position.x - 6;
 			instance.GetComponent<Transform>().position = rightDoorExit;
 		}
 		else
 		{
-			print(coll.name);
+			print(coll.collider.name);
 		}
 	}
 }
