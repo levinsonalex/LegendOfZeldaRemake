@@ -21,6 +21,8 @@ public class PlayerControl : MonoBehaviour {
 
 	public float walking_velocity = 1.0f;
 	public int rupee_count = 0;
+	public int key_count = 0;
+	public int bomb_count = 0;
 
 	public static PlayerControl instance;
 
