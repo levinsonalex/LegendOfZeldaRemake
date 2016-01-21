@@ -22,12 +22,14 @@ public class Tile : MonoBehaviour {
 		bc = GetComponent<BoxCollider>();
 
         sprend = GetComponent<SpriteRenderer>();
+
         //Renderer rend = gameObject.GetComponent<Renderer>();
         //mat = rend.material;
-	}
+    }
 
 	public void SetTile(int eX, int eY, int eTileNum = -1) {
-		if (x == eX && y == eY) return; // Don't move this if you don't have to. - JB
+
+        if (x == eX && y == eY) return; // Don't move this if you don't have to. - JB
 
 		x = eX;
 		y = eY;
@@ -65,28 +67,22 @@ public class Tile : MonoBehaviour {
 		// Collider info from collisionData
 		bc.enabled = true;
 		char c = ShowMapOnCamera.S.collisionS[tileNum];
-		switch (c) {
-			case 'S': // Solid
-				bc.center = Vector3.zero;
-				bc.size = Vector3.one;
-				break;
-            case 'P': //Pushable
-                if (bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_74")
-                {
-                    print("WTF");
-                    break;
-                }
-                else
-                {
-                    print(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name);
-                    bc.center = Vector3.zero;
-                    bc.size = Vector3.one;
-                    bc.gameObject.tag = "Pushable";
-                    break;
-                }
-			default:
-				bc.enabled = false;
-				break;
+        if (bc.gameObject.name == "023x038")
+        {
+            bc.center = Vector3.zero;
+            bc.size = Vector3.one;
+            bc.gameObject.tag = "Pushable";
+        }
+        else if (c == 'S') // Solid
+        {
+            bc.center = Vector3.zero;
+            bc.size = Vector3.one;
+            bc.gameObject.tag = "Untagged";
+        }
+        else
+        {
+            bc.gameObject.tag = "Untagged";
+            bc.enabled = false;
 		}
 	}	
 }

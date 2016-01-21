@@ -173,11 +173,37 @@ public class StateLinkNormalMovement : State
 		float vertical_input = Input.GetAxis("Vertical");
 
 		if(horizontal_input != 0.0f)
-		{
-			vertical_input = 0.0f;
-		}
+        {
+            if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 5)
+            {
+                //horizontal_input = 0f;
+                Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
+                vertical_input = .75f;
+                if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
+                {
+                    vertical_input = -vertical_input;
+                }
+            }
+            else
+            {
+                vertical_input = 0.0f;
+            }
+        }
+        else if(vertical_input != 0.0f)
+        {
+            if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 5)
+            {
+                //vertical_input = 0f;
+                Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
+                horizontal_input = .75f;
+                if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) < 2.5)
+                {
+                    horizontal_input = -horizontal_input;
+                }
+            }
+        }
 
-		pc.GetComponent<Rigidbody>().velocity = new Vector3(horizontal_input, vertical_input, 0) * pc.walking_velocity * time_delta_fraction;
+        pc.GetComponent<Rigidbody>().velocity = new Vector3(horizontal_input, vertical_input, 0) * pc.walking_velocity * time_delta_fraction;
 
 		if(horizontal_input > 0.0f)
 		{
