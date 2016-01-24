@@ -208,9 +208,10 @@ public class PlayerControl : MonoBehaviour {
 			doorTouch = true;
 			firstTouch = coll.gameObject;
 		}
+		//Pushable Blocks
 		else if (coll.gameObject.CompareTag("Pushable"))
 		{
-			if (coll.gameObject.name == "023x038")
+			if (coll.gameObject.name == "023x038" && coll.gameObject.transform.position.x > 22)
 			{
 				if(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
 					Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
@@ -218,6 +219,20 @@ public class PlayerControl : MonoBehaviour {
 					control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("017x038").gameObject));
 				}
 			}
+			if(coll.gameObject.name == "022x060" && Mathf.Abs(coll.gameObject.transform.position.y-60) < 1)
+			{
+				if (Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+				{
+					if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0)
+					{
+						control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+					}
+					else
+					{
+						control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+					}
+				}
+            }
 		}
 		else
 		{

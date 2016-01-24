@@ -173,35 +173,35 @@ public class StateLinkNormalMovement : State
 		float vertical_input = Input.GetAxis("Vertical");
 
 		if(horizontal_input != 0.0f)
-        {
-            if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 5)
-            {
-                //Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
-                vertical_input = .75f;
-                if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
-                {
-                    vertical_input = -vertical_input;
-                }
-            }
-            else
-            {
-                vertical_input = 0.0f;
-            }
-        }
-        else if(vertical_input != 0.0f)
-        {
-            if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 5)
-            {
-                //Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
-                horizontal_input = .75f;
-                if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) < 2.5)
-                {
-                    horizontal_input = -horizontal_input;
-                }
-            }
-        }
+		{
+			if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 5)
+			{
+				//Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
+				vertical_input = .75f;
+				if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
+				{
+					vertical_input = -vertical_input;
+				}
+			}
+			else
+			{
+				vertical_input = 0.0f;
+			}
+		}
+		else if(vertical_input != 0.0f)
+		{
+			if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 5)
+			{
+				//Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
+				horizontal_input = .75f;
+				if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) < 2.5)
+				{
+					horizontal_input = -horizontal_input;
+				}
+			}
+		}
 
-        pc.GetComponent<Rigidbody>().velocity = new Vector3(horizontal_input, vertical_input, 0) * pc.walking_velocity * time_delta_fraction;
+		pc.GetComponent<Rigidbody>().velocity = new Vector3(horizontal_input, vertical_input, 0) * pc.walking_velocity * time_delta_fraction;
 
 		if(horizontal_input > 0.0f)
 		{
@@ -300,14 +300,16 @@ public class StateLinkPush : State
 	PlayerControl pc;
 	GameObject pushBlock;
 	GameObject doorBlock;
-	float speed;
+	Vector3 initialLocation;
+	Direction dir;
 
-	public StateLinkPush(PlayerControl pc, GameObject pushBlock, GameObject doorBlock, float speed = .1f)
+	public StateLinkPush(PlayerControl pc, GameObject pushBlock, GameObject doorBlock = null)
 	{
 		this.pc = pc;
 		this.pushBlock = pushBlock;
 		this.doorBlock = doorBlock;
-		this.speed = speed;
+		initialLocation = pushBlock.transform.position;
+		dir = pc.current_direction;
 	}
 
 	public override void OnStart()
@@ -315,16 +317,42 @@ public class StateLinkPush : State
 		pc.current_state = EntityState.PUSHING;
 
 		pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
-		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
 
+		RigidbodyConstraints posFreeze = RigidbodyConstraints.None;
+		if(dir == Direction.NORTH || dir == Direction.SOUTH)
+		{
+			posFreeze = RigidbodyConstraints.FreezePositionX;
+		}
+		else
+		{
+			posFreeze = RigidbodyConstraints.FreezePositionY;
+		}
+		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | posFreeze;
 	}
 
 	public override void OnUpdate(float time_delta_fraction)
 	{
-		if (pushBlock.GetComponent<Rigidbody>().position.x >= 22)
+		if (!isOver())
 		{
-			pc.GetComponent<Rigidbody>().velocity = new Vector3(-1f, 0, 0);
-			pushBlock.GetComponent<Rigidbody>().velocity = new Vector3(-1f, 0, 0);
+			Vector3 vel;
+			if(dir == Direction.NORTH)
+			{
+				vel = new Vector3(0, 1f, 0);
+			}
+			else if(dir == Direction.SOUTH)
+			{
+				vel = new Vector3(0, -1f, 0);
+			}
+			else if(dir == Direction.EAST)
+			{
+				vel = new Vector3(1f, 0, 0);
+			}
+			else
+			{
+				vel = new Vector3(-1f, 0, 0);
+			}
+			pc.GetComponent<Rigidbody>().velocity = vel;
+			pushBlock.GetComponent<Rigidbody>().velocity = vel;
 		}
 		else
 		{
@@ -336,9 +364,30 @@ public class StateLinkPush : State
 	{
 		pushBlock.GetComponent<Rigidbody>().velocity = Vector3.zero;
 		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-		doorBlock.gameObject.GetComponent<SpriteRenderer>().sprite = pc.mapSprites[51];
-		doorBlock.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+		if (doorBlock != null)
+		{
+			doorBlock.gameObject.GetComponent<SpriteRenderer>().sprite = pc.mapSprites[51];
+			doorBlock.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+		}
 		pc.current_state = EntityState.NORMAL;
+	}
+
+	private bool isOver()
+	{
+		if (dir == Direction.WEST || dir == Direction.EAST) {
+			if (Mathf.Abs(pushBlock.GetComponent<Rigidbody>().position.x - initialLocation.x) >= 1)
+			{
+				return true;
+			}
+		}
+		else if(dir == Direction.NORTH || dir == Direction.SOUTH)
+		{
+			if (Mathf.Abs(pushBlock.GetComponent<Rigidbody>().position.y - initialLocation.y) >= 1)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
 // Additional recommended states:
