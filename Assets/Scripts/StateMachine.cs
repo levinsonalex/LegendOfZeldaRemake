@@ -295,6 +295,104 @@ public class StateLinkAttack : State
 	}
 }
 
+public class StateLinkTransition : State
+{
+	PlayerControl pc;
+	Direction dir;
+	Vector3 camInitialPos;
+	Vector3 camFinalPos;
+	Vector3 camTranslation;
+	Vector3 playerInitialLocation;
+	Vector3 doorExitLocation;
+	Vector3 vel;
+
+	public StateLinkTransition(PlayerControl pc, Direction dir)
+	{
+		this.pc = pc;
+		this.dir = dir;
+		playerInitialLocation = pc.transform.position;
+		camInitialPos = ShowMapOnCamera.S.transform.position;
+	}
+
+	public override void OnStart()
+	{
+		pc.current_state = EntityState.TRANSITIONING;
+		pc.GetComponent<SpriteRenderer>().sortingOrder = -1;
+
+		if (dir == Direction.EAST)
+		{
+			pc.roomX++;
+			camTranslation = new Vector3(ShowMapOnCamera.S.screenSize.x, 0, 0);
+		}
+		else if (dir == Direction.WEST)
+		{
+			pc.roomX--;
+			camTranslation = new Vector3(-ShowMapOnCamera.S.screenSize.x, 0, 0);
+		}
+		else if (dir == Direction.NORTH)
+		{
+			pc.roomY++;
+			camTranslation = new Vector3(0, ShowMapOnCamera.S.screenSize.y - ShowMapOnCamera.S.tileClearOverage, 0);
+		}
+		else //dir == Direction.SOUTH
+		{
+			pc.roomY--;
+			camTranslation = new Vector3(0, -ShowMapOnCamera.S.screenSize.y + ShowMapOnCamera.S.tileClearOverage, 0);
+		}
+
+		camFinalPos = camInitialPos + camTranslation;
+	}
+
+	public override void OnUpdate(float time_delta_fraction)
+	{
+		if (dir == Direction.EAST && ShowMapOnCamera.S.transform.position.x < camFinalPos.x)
+		{
+			vel = new Vector3(1f, 0, 0);
+			camTranslation = new Vector3(ShowMapOnCamera.S.screenSize.x, 0, 0);
+			ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = vel * pc.walking_velocity * time_delta_fraction;
+			doorExitLocation = new Vector3(camFinalPos.x - 5.5f, playerInitialLocation.y, playerInitialLocation.z);
+		}
+		else if (dir == Direction.WEST && ShowMapOnCamera.S.transform.position.x > camFinalPos.x)
+		{
+			vel = new Vector3(-1f, 0, 0);
+			camTranslation = new Vector3(-ShowMapOnCamera.S.screenSize.x, 0, 0);
+			ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = vel * pc.walking_velocity * time_delta_fraction;
+			doorExitLocation = new Vector3(camFinalPos.x + 5.5f, playerInitialLocation.y, playerInitialLocation.z);
+		}
+		else if (dir == Direction.NORTH && ShowMapOnCamera.S.transform.position.y < camFinalPos.y)
+		{
+			vel = new Vector3(0, 1f, 0);
+			camTranslation = new Vector3(0, ShowMapOnCamera.S.screenSize.y - ShowMapOnCamera.S.tileClearOverage, 0);
+			ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = vel * pc.walking_velocity * time_delta_fraction;
+			doorExitLocation = new Vector3(playerInitialLocation.x, camFinalPos.y - 5f, playerInitialLocation.z);
+		}
+		else if (dir == Direction.SOUTH && ShowMapOnCamera.S.transform.position.y > camFinalPos.y)
+		{
+			vel = new Vector3(0, -1f, 0);
+			camTranslation = new Vector3(0, -ShowMapOnCamera.S.screenSize.y + ShowMapOnCamera.S.tileClearOverage, 0);
+			ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = vel * pc.walking_velocity * time_delta_fraction;
+			doorExitLocation = new Vector3(playerInitialLocation.x, camFinalPos.y + 2f, playerInitialLocation.z);
+		}
+		else
+		{
+			ConcludeState();
+		}
+	}
+
+	public override void OnFinish()
+	{
+		pc.GetComponent<SpriteRenderer>().sortingOrder = 10;
+		pc.GetComponent<Transform>().position = doorExitLocation;
+
+		pc.transform.position = new Vector3(pc.transform.position.x, pc.transform.position.y, 0);
+		ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+		Debug.Log("X:" + pc.roomX + " Y:" + pc.roomY);
+		pc.roomHandle(pc.roomX, pc.roomY);
+		pc.current_state = EntityState.NORMAL;
+	}
+}
+
 public class StateLinkPush : State
 {
 	PlayerControl pc;

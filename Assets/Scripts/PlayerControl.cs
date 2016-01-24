@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
-public enum EntityState {NORMAL, ATTACKING, PUSHING};
+public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING };
 
 public class PlayerControl : MonoBehaviour {
 
@@ -29,6 +29,7 @@ public class PlayerControl : MonoBehaviour {
 	public int bomb_count = 0;
 
 	private bool doorTouch = false;
+	private bool moveRoom = false;
 	private GameObject firstTouch;
 
 	public static PlayerControl instance;
@@ -66,6 +67,11 @@ public class PlayerControl : MonoBehaviour {
 		}
 	}
 
+	void FixedUpdate()
+	{
+		moveRoom = false;
+	}
+
 	void OnTriggerEnter(Collider coll)
 	{
 		if (coll.gameObject.tag == "Rupee")
@@ -89,71 +95,53 @@ public class PlayerControl : MonoBehaviour {
 		//Left Door
 		if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_50")
 		{
-			if (!doorTouch)
+			if (!moveRoom)
 			{
-				Vector3 trans = new Vector3(-ShowMapOnCamera.S.screenSize.x, 0, 0);
-				ShowMapOnCamera.S.transform.Translate(trans);
-				Vector3 leftDoorExit = instance.GetComponent<Transform>().position;
-				leftDoorExit.x = ShowMapOnCamera.S.transform.position.x + 5.5f;
-				instance.GetComponent<Transform>().position = leftDoorExit;
-				roomX--;
+				control_state_machine.ChangeState(new StateLinkTransition(this, Direction.WEST));
+				moveRoom = true;
 			}
 			else
 			{
-				doorTouch = false;
+				moveRoom = false;
 			}
 		}
 		//Right Door
 		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_49")
 		{
-			if (!doorTouch)
+			if (!moveRoom)
 			{
-				Vector3 trans = new Vector3(ShowMapOnCamera.S.screenSize.x, 0, 0);
-				ShowMapOnCamera.S.transform.Translate(trans);
-				Vector3 rightDoorExit = instance.GetComponent<Transform>().position;
-				rightDoorExit.x = ShowMapOnCamera.S.transform.position.x - 5.5f;
-				instance.GetComponent<Transform>().position = rightDoorExit;
-				roomX++;
+				control_state_machine.ChangeState(new StateLinkTransition(this, Direction.EAST));
+				moveRoom = true;
 			}
 			else 
 			{
-				doorTouch = false;
+				moveRoom = false;
 			}
 		}
 		//Up Door
 		else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_91")
 		{
-			if (!doorTouch)
+			if (!moveRoom)
 			{
-				Vector3 trans = new Vector3(0, ShowMapOnCamera.S.screenSize.y - ShowMapOnCamera.S.tileClearOverage, 0);
-				ShowMapOnCamera.S.transform.Translate(trans);
-				Vector3 upDoorExit = instance.GetComponent<Transform>().position;
-				upDoorExit.y = ShowMapOnCamera.S.transform.position.y - 5;
-				instance.GetComponent<Transform>().position = upDoorExit;
-				doorTouch = true;
-				roomY++;
+				control_state_machine.ChangeState(new StateLinkTransition(this, Direction.NORTH));
+				moveRoom = true;
 			}
 			else
 			{
-				doorTouch = false;
+				moveRoom = false;
 			}
 		}
 		//Down Door
 		else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_10")
 		{
-			if (!doorTouch)
+			if (!moveRoom)
 			{
-				Vector3 trans = new Vector3(0, - ShowMapOnCamera.S.screenSize.y + ShowMapOnCamera.S.tileClearOverage, 0);
-				ShowMapOnCamera.S.transform.Translate(trans);
-				Vector3 downDoorExit = instance.GetComponent<Transform>().position;
-				downDoorExit.y = ShowMapOnCamera.S.transform.position.y + 2;
-				instance.GetComponent<Transform>().position = downDoorExit;
-				doorTouch = true;
-				roomY--;
+				control_state_machine.ChangeState(new StateLinkTransition(this, Direction.SOUTH));
+				moveRoom = true;
 			} 
 			else
 			{
-				doorTouch = false;
+				moveRoom = false;
 			}
 		}
 		//Locked Door Right
@@ -239,12 +227,11 @@ public class PlayerControl : MonoBehaviour {
 			print(coll.collider.name);
 			doorTouch = false;
 			firstTouch = null;
+			moveRoom = false;
 		}
-		roomHandle(roomX, roomY);
-		print("X:" + roomX + " Y:" + roomY);
 	}
 
-	void roomHandle(int x, int y)
+	public void roomHandle(int x, int y)
 	{
 		if(x == -1 && y == 3)
 		{
