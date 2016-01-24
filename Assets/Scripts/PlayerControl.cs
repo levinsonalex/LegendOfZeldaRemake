@@ -16,6 +16,10 @@ public class PlayerControl : MonoBehaviour {
 	
 	public EntityState current_state = EntityState.NORMAL;
 	public Direction current_direction = Direction.SOUTH;
+	public bool eastMostTypewriterOnSwitch = false;
+
+	public int roomX = 0;
+	public int roomY = 0;
 
 	public GameObject selected_weapon_prefab;
 
@@ -92,6 +96,7 @@ public class PlayerControl : MonoBehaviour {
 				Vector3 leftDoorExit = instance.GetComponent<Transform>().position;
 				leftDoorExit.x = ShowMapOnCamera.S.transform.position.x + 5.5f;
 				instance.GetComponent<Transform>().position = leftDoorExit;
+				roomX--;
 			}
 			else
 			{
@@ -108,6 +113,7 @@ public class PlayerControl : MonoBehaviour {
 				Vector3 rightDoorExit = instance.GetComponent<Transform>().position;
 				rightDoorExit.x = ShowMapOnCamera.S.transform.position.x - 5.5f;
 				instance.GetComponent<Transform>().position = rightDoorExit;
+				roomX++;
 			}
 			else 
 			{
@@ -125,6 +131,7 @@ public class PlayerControl : MonoBehaviour {
 				upDoorExit.y = ShowMapOnCamera.S.transform.position.y - 5;
 				instance.GetComponent<Transform>().position = upDoorExit;
 				doorTouch = true;
+				roomY++;
 			}
 			else
 			{
@@ -142,6 +149,7 @@ public class PlayerControl : MonoBehaviour {
 				downDoorExit.y = ShowMapOnCamera.S.transform.position.y + 2;
 				instance.GetComponent<Transform>().position = downDoorExit;
 				doorTouch = true;
+				roomY--;
 			} 
 			else
 			{
@@ -216,6 +224,20 @@ public class PlayerControl : MonoBehaviour {
 			print(coll.collider.name);
 			doorTouch = false;
 			firstTouch = null;
+		}
+		roomHandle(roomX, roomY);
+		print("X:" + roomX + " Y:" + roomY);
+	}
+
+	void roomHandle(int x, int y)
+	{
+		if(x == -1 && y == 3)
+		{
+			eastMostTypewriterOnSwitch = false;
+		}
+		else if(x == -2 && y == 3)
+		{
+			eastMostTypewriterOnSwitch = true;
 		}
 	}
 }
