@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
-public enum EntityState {NORMAL, ATTACKING};
+public enum EntityState {NORMAL, ATTACKING, PUSHING};
 
 public class PlayerControl : MonoBehaviour {
 
@@ -148,28 +148,28 @@ public class PlayerControl : MonoBehaviour {
 				doorTouch = false;
 			}
 		}
-        //Locked Door Right
-        else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_101")
-        {
-            if(key_count > 0)
-            {
-                coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
-                coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
-                key_count--;
-            }
-        }
-        //Locked Door Left
-        else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_106")
-        {
-            if (key_count > 0)
-            {
-                coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[51];
-                coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
-                key_count--;
-            }
-        }
-        //Locked Door Up
-        else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_80" || coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_81")
+		//Locked Door Right
+		else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_101")
+		{
+			if(key_count > 0)
+			{
+				coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
+				coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+				key_count--;
+			}
+		}
+		//Locked Door Left
+		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_106")
+		{
+			if (key_count > 0)
+			{
+				coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[51];
+				coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+				key_count--;
+			}
+		}
+		//Locked Door Up
+		else if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_80" || coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_81")
 		{
 			if (doorTouch)
 			{
@@ -200,18 +200,18 @@ public class PlayerControl : MonoBehaviour {
 			doorTouch = true;
 			firstTouch = coll.gameObject;
 		}
-        else if (coll.gameObject.CompareTag("Pushable"))
-        {
-            if (coll.gameObject.name == "023x038")
-            {
-                if(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                   Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
-                {
-                    print("MOVE THAT SHIT!");
-                }
-            }
-        }
-        else
+		else if (coll.gameObject.CompareTag("Pushable"))
+		{
+			if (coll.gameObject.name == "023x038")
+			{
+				if(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+					Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+				{
+					control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("017x038").gameObject));
+				}
+			}
+		}
+		else
 		{
 			print(coll.collider.name);
 			doorTouch = false;

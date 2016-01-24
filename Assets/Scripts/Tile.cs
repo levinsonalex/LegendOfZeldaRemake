@@ -72,7 +72,16 @@ public class Tile : MonoBehaviour {
             bc.center = Vector3.zero;
             bc.size = Vector3.one;
             bc.gameObject.tag = "Pushable";
+			bc.gameObject.GetComponent<SpriteRenderer>().sortingOrder = 2;
+			bc.gameObject.AddComponent<Rigidbody>();
+			bc.gameObject.GetComponent<Rigidbody>().useGravity = false;
+			bc.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         }
+		else if(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_99")
+		{
+			bc.gameObject.tag = "Untagged";
+			bc.enabled = false;
+		}
         else if (c == 'S') // Solid
         {
             bc.center = Vector3.zero;

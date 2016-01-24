@@ -295,6 +295,52 @@ public class StateLinkAttack : State
 	}
 }
 
+public class StateLinkPush : State
+{
+	PlayerControl pc;
+	GameObject pushBlock;
+	GameObject doorBlock;
+	float speed;
+
+	public StateLinkPush(PlayerControl pc, GameObject pushBlock, GameObject doorBlock, float speed = .1f)
+	{
+		this.pc = pc;
+		this.pushBlock = pushBlock;
+		this.doorBlock = doorBlock;
+		this.speed = speed;
+	}
+
+	public override void OnStart()
+	{
+		pc.current_state = EntityState.PUSHING;
+
+		pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+
+	}
+
+	public override void OnUpdate(float time_delta_fraction)
+	{
+		if (pushBlock.GetComponent<Rigidbody>().position.x >= 22)
+		{
+			pc.GetComponent<Rigidbody>().velocity = new Vector3(-1f, 0, 0);
+			pushBlock.GetComponent<Rigidbody>().velocity = new Vector3(-1f, 0, 0);
+		}
+		else
+		{
+			ConcludeState();
+		}
+	}
+
+	public override void OnFinish()
+	{
+		pushBlock.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+		doorBlock.gameObject.GetComponent<SpriteRenderer>().sprite = pc.mapSprites[51];
+		doorBlock.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+		pc.current_state = EntityState.NORMAL;
+	}
+}
 // Additional recommended states:
 // StateDeath
 // StateDamaged
