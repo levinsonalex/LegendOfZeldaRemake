@@ -202,7 +202,14 @@ public class PlayerControl : MonoBehaviour {
 		}
         else if (coll.gameObject.CompareTag("Pushable"))
         {
-            print("PUSHABLE BABY!: " + coll.gameObject.GetComponent<SpriteRenderer>().sprite.name);
+            if (coll.gameObject.name == "023x038")
+            {
+                if(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                   Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    print("MOVE THAT SHIT!");
+                }
+            }
         }
         else
 		{

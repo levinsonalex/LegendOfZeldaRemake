@@ -176,8 +176,7 @@ public class StateLinkNormalMovement : State
         {
             if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 5)
             {
-                //horizontal_input = 0f;
-                Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
+                //Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
                 vertical_input = .75f;
                 if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
                 {
@@ -193,8 +192,7 @@ public class StateLinkNormalMovement : State
         {
             if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) != 5)
             {
-                //vertical_input = 0f;
-                Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
+                //Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
                 horizontal_input = .75f;
                 if (Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5) < 2.5)
                 {
