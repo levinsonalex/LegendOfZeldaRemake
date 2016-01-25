@@ -67,7 +67,7 @@ public class Tile : MonoBehaviour {
 		// Collider info from collisionData
 		bc.enabled = true;
 		char c = ShowMapOnCamera.S.collisionS[tileNum];
-        if (bc.gameObject.name == "023x038")
+		if (bc.gameObject.name == "023x038")
         {
             bc.center = Vector3.zero;
             bc.size = Vector3.one;

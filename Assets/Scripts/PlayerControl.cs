@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
 public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING };
@@ -20,6 +21,9 @@ public class PlayerControl : MonoBehaviour {
 
 	public int roomX = 0;
 	public int roomY = 0;
+
+	public int curHealth = 6;
+	public int maxHealth = 6;
 
 	public GameObject selected_weapon_prefab;
 

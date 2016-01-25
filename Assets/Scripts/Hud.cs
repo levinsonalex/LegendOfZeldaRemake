@@ -6,6 +6,8 @@ public class Hud : MonoBehaviour {
 
 	public Text Rupee_Text;
 	public Text Key_Text;
+	public GameObject HeartPrefab;
+	public ArrayList Hearts_Img;
 
 	// Use this for initialization
 	void Start () {
@@ -19,5 +21,8 @@ public class Hud : MonoBehaviour {
 
 		int num_player_keys = PlayerControl.instance.key_count;
 		Key_Text.text = " × " + num_player_keys;
+
+		int num_player_hearts = PlayerControl.instance.curHealth/2;
+
     }
 }
