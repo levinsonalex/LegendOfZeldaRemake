@@ -22,7 +22,6 @@ public class Tile : MonoBehaviour {
 		bc = GetComponent<BoxCollider>();
 
         sprend = GetComponent<SpriteRenderer>();
-
         //Renderer rend = gameObject.GetComponent<Renderer>();
         //mat = rend.material;
     }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-enum Mode{
+public enum Mode{
 	walking, attacked
 };
 
@@ -9,15 +9,15 @@ public class enemy : MonoBehaviour {
 
 	Random random = new Random();
 
-	int 				movingSpeed = 2;
-	int 				attackedSpeed = 3;
-	int					hitCount = 2;
+	public int 				movingSpeed;// = 2;
+	public int 				attackedSpeed;// = 3;
+	public int				hitCount;// = 2;
 
-	public Direction 	curDirection;
-	public int 			curSpeed;
-	Mode				curMode;
+	public Direction 		curDirection;
+	public int 				curSpeed;
+	public Mode				curMode;
 
-	Rigidbody			rig;
+	public Rigidbody		rig;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +31,39 @@ public class enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+
+//		if(horizontal_input != 0.0f)
+//		{
+//			if (Mathf.Round((this.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((this.GetComponent<Transform>().position.y * 10) % 5) != 5)
+//			{
+//				//Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
+//				vertical_input = .75f;
+//				if (Mathf.Round((this.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
+//				{
+//					vertical_input = -vertical_input;
+//				}
+//			}
+//			else
+//			{
+//				vertical_input = 0.0f;
+//			}
+//		}
+//		else if(vertical_input != 0.0f)
+//		{
+//			if (Mathf.Round((this.GetComponent<Transform>().position.x * 10) % 5) != 0 && Mathf.Round((this.GetComponent<Transform>().position.x * 10) % 5) != 5)
+//			{
+//				//Debug.Log("Not H aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.x * 10) % 5));
+//				horizontal_input = .75f;
+//				if (Mathf.Round((this.GetComponent<Transform>().position.x * 10) % 5) < 2.5)
+//				{
+//					horizontal_input = -horizontal_input;
+//				}
+//			}
+//		}
+//		
+//		this.GetComponent<Rigidbody>().velocity = new Vector3(horizontal_input, vertical_input, 0) * this.curSpeed * time_delta_fraction;
+//
 
 		Vector3 newVel = Vector3.zero;
 		if (curMode == Mode.walking) { 
@@ -79,6 +112,5 @@ public class enemy : MonoBehaviour {
 		while (curDirection == oldDir) {
 			curDirection = (Direction)Random.Range (0, 3);
 		}
-
 	}
 }
