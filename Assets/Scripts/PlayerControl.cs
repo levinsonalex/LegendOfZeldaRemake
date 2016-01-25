@@ -36,6 +36,10 @@ public class PlayerControl : MonoBehaviour {
 	private bool moveRoom = false;
 	private GameObject firstTouch;
 
+	private bool doorUnlocked0x0 = false;
+	private bool doorUnlocked_1x2 = false;
+	private bool doorUnlocked0x3 = false;
+
 	public static PlayerControl instance;
 
 	public Sprite[] mapSprites;
@@ -156,6 +160,11 @@ public class PlayerControl : MonoBehaviour {
 				coll.gameObject.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
 				coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 				key_count--;
+
+				if (roomX == 0 && roomY == 3)
+				{
+					doorUnlocked0x3 = true;
+				}
 			}
 		}
 		//Locked Door Left
@@ -187,6 +196,15 @@ public class PlayerControl : MonoBehaviour {
 					}
 					coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 					firstTouch.GetComponent<BoxCollider>().isTrigger = true;
+
+					if(roomX == 0 && roomY == 0)
+					{
+						doorUnlocked0x0 = true;
+					}
+					else if(roomX == -1 && roomY == 2)
+					{
+						doorUnlocked_1x2 = true;
+					}
 
 					firstTouch = null;
 					doorTouch = false;
@@ -224,7 +242,7 @@ public class PlayerControl : MonoBehaviour {
 						control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
 					}
 				}
-            }
+			}
 		}
 		else
 		{
@@ -237,11 +255,49 @@ public class PlayerControl : MonoBehaviour {
 
 	public void roomHandle(int x, int y)
 	{
-		if(x == -1 && y == 3)
+		if (doorUnlocked0x0)
+		{
+			GameObject leftUpDoor = GameObject.Find("039x009");
+			GameObject rightUpDoor = GameObject.Find("040x009");
+			if (leftUpDoor != null && rightUpDoor != null)
+			{
+				leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+				rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+
+				leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+				rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+			}
+		}
+
+		if (doorUnlocked_1x2)
+		{
+			GameObject leftUpDoor = GameObject.Find("023x031");
+			GameObject rightUpDoor = GameObject.Find("024x031");
+			if (leftUpDoor != null && rightUpDoor != null)
+			{
+				leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+				rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+
+				leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+				rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+			}
+		}
+
+		if (doorUnlocked0x3)
+		{
+			GameObject door = GameObject.Find("046x038");
+			if (door != null)
+			{
+				door.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
+				door.GetComponent<BoxCollider>().isTrigger = true;
+			}
+		}
+
+		if (x == -1 && y == 3)
 		{
 			eastMostTypewriterOnSwitch = false;
 		}
-		else if(x == -2 && y == 3)
+		else if (x == -2 && y == 3)
 		{
 			eastMostTypewriterOnSwitch = true;
 		}

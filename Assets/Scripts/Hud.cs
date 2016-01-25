@@ -6,7 +6,8 @@ public class Hud : MonoBehaviour {
 
 	public Text Rupee_Text;
 	public Text Key_Text;
-	public GameObject HeartPrefab;
+	public GameObject LHeartPrefab;
+	public GameObject RHeartPrefab;
 	public ArrayList Hearts_Img;
 
 	// Use this for initialization
