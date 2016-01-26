@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
 public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING };
@@ -30,6 +31,10 @@ public class PlayerControl : MonoBehaviour {
 	public bool invincible = false;
 
 	public GameObject selected_weapon_prefab;
+    public GameObject sword_prefab;
+    public GameObject bow_prefab;
+    public GameObject boomerang_prefab;
+
     public bool hasBoomerang = false;
     public bool hasBow = false;
     public bool hasCompass = false;
@@ -127,7 +132,7 @@ public class PlayerControl : MonoBehaviour {
 
 	void OnTriggerEnter(Collider coll)
 	{
-		if (coll.gameObject.tag == "Rupee")
+        if (coll.gameObject.tag == "Rupee")
 		{
 			Destroy(coll.gameObject);
 			rupee_count++;
@@ -141,11 +146,27 @@ public class PlayerControl : MonoBehaviour {
         {
             Destroy(coll.gameObject);
             hasMap = true;
+            Hud.instance.Map_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
         }
         else if(coll.gameObject.tag == "Compass")
         {
             Destroy(coll.gameObject);
             hasCompass = true;
+            Hud.instance.Compass_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+        }
+        else if(coll.gameObject.tag == "Bow")
+        {
+            Destroy(coll.gameObject);
+            hasBow = true;
+            Hud.instance.Bow_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+            Hud.instance.cursorLocations.Add(0);
+        }
+        else if(coll.gameObject.tag == "Boomerang")
+        {
+            Destroy(coll.gameObject);
+            hasBoomerang = true;
+            Hud.instance.Boomerang_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+            Hud.instance.cursorLocations.Add(55);
         }
         else if(coll.gameObject.name == "080x049")
         {

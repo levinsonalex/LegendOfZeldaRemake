@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Hud : MonoBehaviour {
 
@@ -15,10 +16,20 @@ public class Hud : MonoBehaviour {
     public GameObject Boomerang_Inv;
 	public GameObject LHeartPrefab;
 	public GameObject RHeartPrefab;
+    public GameObject Cursor_Inv;
+    public List<float> cursorLocations;
+    private int cursorIndex = 0;
 
-	// Use this for initialization
-	void Start () {
-	
+    public static Hud instance;
+
+    // Use this for initialization
+    void Start () {
+        if (instance != null)
+        {
+            Debug.LogError("Multiple Hud objects detected!");
+        }
+        instance = this;
+        cursorLocations.Add(-50);
 	}
 	
 	// Update is called once per frame
@@ -32,13 +43,30 @@ public class Hud : MonoBehaviour {
 		int num_player_hearts = PlayerControl.instance.curHealth;
 		Heart_Text.text = " × " + num_player_hearts;
 
-        if (PlayerControl.instance.hasCompass)
+        if (Input.GetKeyDown(KeyCode.RightShift) && PlayerControl.instance.pause)
         {
-            Compass_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
-        }
-        if (PlayerControl.instance.hasMap)
-        {
-            Map_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+            cursorIndex++;
+            if(cursorIndex >= cursorLocations.Count)
+            {
+                cursorIndex = 0;
+            }
+            Cursor_Inv.transform.localPosition = new Vector3(cursorLocations[cursorIndex], Cursor_Inv.transform.position.y, 0);
+            if(cursorLocations[cursorIndex] == -50)
+            {
+                PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.sword_prefab;
+            }
+            else if(cursorLocations[cursorIndex] == 0)
+            {
+                PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.bow_prefab;
+            }
+            else if(cursorLocations[cursorIndex] == 50)
+            {
+                PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.boomerang_prefab;
+            }
+            else
+            {
+                Debug.Log("Broken cursor.");
+            }
         }
     }
 }
