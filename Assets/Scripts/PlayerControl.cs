@@ -14,6 +14,9 @@ public class PlayerControl : MonoBehaviour {
 
 	StateMachine animation_state_machine;
 	StateMachine control_state_machine;
+
+    public bool pause = false;
+    public GameObject inventoryScreen;
 	
 	public EntityState current_state = EntityState.NORMAL;
 	public Direction current_direction = Direction.SOUTH;
@@ -71,7 +74,27 @@ public class PlayerControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		animation_state_machine.Update();
+        //Pause
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (pause)
+            {
+                inventoryScreen.SetActive(false);
+            }
+            else
+            {
+                inventoryScreen.SetActive(true);
+            }
+            pause = !pause;
+        }
+
+        if (pause)
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            return;
+        }
+
+        animation_state_machine.Update();
 		control_state_machine.Update();
 
 		if (control_state_machine.IsFinished())
@@ -79,8 +102,9 @@ public class PlayerControl : MonoBehaviour {
 			control_state_machine.ChangeState(new StateLinkNormalMovement(this));
 		}
 
-		if (Input.GetKeyDown(KeyCode.I))
-		{
+		
+        if (Input.GetKeyDown(KeyCode.I))
+        { 
 			if (invincible)
 			{
 				GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
@@ -110,6 +134,16 @@ public class PlayerControl : MonoBehaviour {
 			Destroy(coll.gameObject);
 			key_count++;
 		}
+        else if(coll.gameObject.tag == "Map")
+        {
+            Destroy(coll.gameObject);
+            hasMap = true;
+        }
+        else if(coll.gameObject.tag == "Compass")
+        {
+            Destroy(coll.gameObject);
+            hasCompass = true;
+        }
         else if(coll.gameObject.name == "080x049")
         {
             coll.gameObject.GetComponent<BoxCollider>().isTrigger = false;
