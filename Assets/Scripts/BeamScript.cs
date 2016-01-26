@@ -17,8 +17,12 @@ public class BeamScript : MonoBehaviour {
 
     void OnCollisionEnter(Collision coll)
     {
-        GameObject explosion = Object.Instantiate(explosionPrefab);
-        explosion.transform.position = gameObject.transform.position;
-        Destroy(gameObject);
+        if (coll.gameObject.tag != "Player")
+        {
+            Debug.Log(coll.collider.gameObject.name);
+            GameObject explosion = Object.Instantiate(explosionPrefab);
+            explosion.transform.position = gameObject.transform.position;
+            Destroy(gameObject);
+        }
     }
 }
