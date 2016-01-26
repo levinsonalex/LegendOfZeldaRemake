@@ -30,7 +30,6 @@ public class bat : MonoBehaviour {
 		//change later
 		curDir = nineDir.N;
 		curMode = Mode.walking;
-		
 	}
 
 

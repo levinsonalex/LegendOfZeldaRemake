@@ -24,6 +24,7 @@ public class PlayerControl : MonoBehaviour {
 
 	public int curHealth = 6;
 	public int maxHealth = 6;
+	public bool invincible = false;
 
 	public GameObject selected_weapon_prefab;
 
@@ -72,6 +73,19 @@ public class PlayerControl : MonoBehaviour {
 		if (control_state_machine.IsFinished())
 		{
 			control_state_machine.ChangeState(new StateLinkNormalMovement(this));
+		}
+
+		if (Input.GetKeyDown(KeyCode.I))
+		{
+			if (invincible)
+			{
+				GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+			}
+			else
+			{
+				GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+			}
+			invincible = !invincible;
 		}
 	}
 
