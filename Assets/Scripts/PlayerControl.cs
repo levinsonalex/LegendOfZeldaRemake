@@ -34,6 +34,7 @@ public class PlayerControl : MonoBehaviour {
     public GameObject sword_prefab;
     public GameObject bow_prefab;
     public GameObject boomerang_prefab;
+    public GameObject beam_prefab;
 
     public bool hasBoomerang = false;
     public bool hasBow = false;
@@ -41,6 +42,7 @@ public class PlayerControl : MonoBehaviour {
     public bool hasMap = false;
 
 	public float walking_velocity = 1.0f;
+    public float beam_velocity = 1.0f;
 	public int rupee_count = 0;
 	public int key_count = 0;
 	public int bomb_count = 0;
