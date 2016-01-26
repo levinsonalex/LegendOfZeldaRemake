@@ -386,6 +386,7 @@ public class StateLinkTransition : State
 
 		pc.transform.position = new Vector3(pc.transform.position.x, pc.transform.position.y, 0);
 		ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ShowMapOnCamera.S.transform.position = camFinalPos;
 
 		Debug.Log("X:" + pc.roomX + " Y:" + pc.roomY);
 		pc.roomHandle(pc.roomX, pc.roomY);

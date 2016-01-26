@@ -27,6 +27,10 @@ public class PlayerControl : MonoBehaviour {
 	public bool invincible = false;
 
 	public GameObject selected_weapon_prefab;
+    public bool hasBoomerang = false;
+    public bool hasBow = false;
+    public bool hasCompass = false;
+    public bool hasMap = false;
 
 	public float walking_velocity = 1.0f;
 	public int rupee_count = 0;
@@ -106,6 +110,10 @@ public class PlayerControl : MonoBehaviour {
 			Destroy(coll.gameObject);
 			key_count++;
 		}
+        else if(coll.gameObject.name == "080x049")
+        {
+            coll.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+        }
 		else
 		{
 			print(coll.name);
