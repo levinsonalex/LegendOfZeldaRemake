@@ -41,8 +41,8 @@ public class bat : MonoBehaviour {
 		} else if (curMode == Mode.walking) {
 			if(foundLocX && foundLocY)
 			{
-				targetX = Random.Range (34, 45);
-				targetY = Random.Range (2, 9);
+				targetX = Random.Range (34, 45);//change these to room limits
+				targetY = Random.Range (2, 9); // change these to room limits
 				print ("TargetX is " + targetX);
 				print ("TargetY is " + targetY);
 				foundLocX = false;
@@ -50,32 +50,23 @@ public class bat : MonoBehaviour {
 			}
 
 			Vector3 curLoc = transform.position;
-			if (Mathf.Round((curLoc.x * 10) % 5) != 0 && Mathf.Round((curLoc.x * 10) % 5) != 5)
-			{
-				float vertical_input = .75f;
-				if (Mathf.Round((curLoc.x * 10) % 5) < 2.5)
-				{
-					vertical_input = -vertical_input;
-				}
-				curLoc.x += vertical_input;
-			}
 
 			if (curLoc.y < targetY && !foundLocY) {
 				curDir = nineDir.N;
 			} 
-			else if (curLoc.y > targetY && !foundLocY) {
+			else if (curLoc.y >= (targetY + 1) && !foundLocY) {
 				curDir = nineDir.S;
 			} 
 			else if (curLoc.x < targetX && !foundLocX) {
 				curDir = nineDir.E;
 			} 
-			else if (curLoc.x > targetX && !foundLocX) {
+			else if (curLoc.x >= (targetX + 1) && !foundLocX) {
 				curDir = nineDir.W;
 			} 
-			else if (curLoc.x == targetX){
+			if (curLoc.x >= targetX && curLoc.x < targetX + 1 && !foundLocX){
 				foundLocX = true;
 			} 
-			else if (curLoc.y == targetY){
+			if (curLoc.y >= targetY && curLoc.y < targetY + 1 && !foundLocY){
 				foundLocY = true;
 			}
 
