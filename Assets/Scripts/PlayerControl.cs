@@ -98,6 +98,19 @@ public class PlayerControl : MonoBehaviour {
             pause = !pause;
         }
 
+		if (Input.GetKeyDown(KeyCode.RightShift) && pause)
+		{
+			Hud.instance.cursorIndex++;
+			if (Hud.instance.cursorIndex >= Hud.instance.cursorLocations.Count)
+			{
+				Hud.instance.cursorIndex = 0;
+			}
+			if (Hud.instance.cursorLocations.Count != 0)
+			{
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(Hud.instance.cursorLocations[Hud.instance.cursorIndex], Hud.instance.Cursor_Inv.transform.localPosition.y, 0);
+			}
+		}
+
         if (pause)
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -158,19 +171,29 @@ public class PlayerControl : MonoBehaviour {
         }
         else if(coll.gameObject.tag == "Bow")
         {
-            Destroy(coll.gameObject);
+			Destroy(coll.gameObject);
             hasBow = true;
             Hud.instance.Bow_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
-            Hud.instance.cursorLocations.Add(0);
-        }
-        else if(coll.gameObject.tag == "Boomerang")
+            Hud.instance.cursorLocations.Add(-25);
+			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
+			{
+				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(-25, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+			}
+		}
+		else if(coll.gameObject.tag == "Boomerang")
         {
-            Destroy(coll.gameObject);
+			Destroy(coll.gameObject);
             hasBoomerang = true;
             Hud.instance.Boomerang_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
-            Hud.instance.cursorLocations.Add(55);
-        }
-        else if(coll.gameObject.name == "080x049")
+            Hud.instance.cursorLocations.Add(25);
+			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
+			{
+				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(25, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+			}
+		}
+		else if(coll.gameObject.name == "080x049")
         {
             coll.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         }

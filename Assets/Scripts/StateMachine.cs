@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 
 // State Machines are responsible for processing states, notifying them when they're about to begin or conclude, etc.
 public class StateMachine
@@ -220,7 +221,11 @@ public class StateLinkNormalMovement : State
 			pc.current_direction = Direction.SOUTH;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Z))
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			state_machine.ChangeState(new StateLinkAttack(pc, pc.sword_prefab, 15));
+		}
+		else if (pc.selected_weapon_prefab != null && Input.GetKeyDown(KeyCode.S))
 		{
 			state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15));
 		}
