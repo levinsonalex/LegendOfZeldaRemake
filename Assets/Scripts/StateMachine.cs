@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿
+using UnityEngine;
 
 // State Machines are responsible for processing states, notifying them when they're about to begin or conclude, etc.
 public class StateMachine
@@ -221,7 +222,11 @@ public class StateLinkNormalMovement : State
 			pc.current_direction = Direction.SOUTH;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Z))
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			state_machine.ChangeState(new StateLinkAttack(pc, pc.sword_prefab, 15));
+		}
+		else if (pc.selected_weapon_prefab != null && Input.GetKeyDown(KeyCode.S))
 		{
 			state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15));
 		}
@@ -280,13 +285,21 @@ public class StateLinkAttack : State
 		new_weapon_rotation.eulerAngles = direction_eulerAngle;
 		weapon_instance.transform.rotation = new_weapon_rotation;
 
-        if (pc.curHealth == pc.maxHealth && GameObject.FindGameObjectWithTag("Beam") == null)
+        if (pc.curHealth == pc.maxHealth && weapon_prefab.gameObject.tag == "Sword" && GameObject.FindGameObjectWithTag("Beam") == null)
         {
             beam = Object.Instantiate(pc.beam_prefab, pc.transform.position, Quaternion.identity) as GameObject;
             beam.transform.position += direction_offset;
             beam.transform.rotation = new_weapon_rotation;
 
             beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+        }
+        else if(weapon_prefab.gameObject.name == "wooden_bow")
+        {
+            GameObject arrow = Object.Instantiate(pc.arrow_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            arrow.transform.position += direction_offset;
+            arrow.transform.rotation = new_weapon_rotation;
+
+            arrow.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
         }
     }
 
