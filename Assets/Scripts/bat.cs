@@ -3,6 +3,9 @@ using System.Collections;
 public enum nineDir{
 	NW, N, NE, E, SE, S, SW, W
 };
+public enum batState{
+	stopped, go_up, flying, slowDown
+};
 
 public class bat : MonoBehaviour {
 
@@ -16,10 +19,31 @@ public class bat : MonoBehaviour {
 	public int 				movingSpeed = 2;// = 2;
 	public int 				attackedSpeed;// = 3;
 	public int				hitCount = 1;// = 2;
+
+	public int				numLocation = 0;
 	
 	public nineDir 			curDir;
-	public int 				curSpeed;
+	public float 			curSpeed;
 	public Mode				curMode;
+
+	public int				roomXMin;
+	public int				roomXMax;
+	public int				roomYMin;
+	public int 				roomYMax;
+
+	public float 			t;
+	public float 			startTime;
+	bool					starting = true;
+	public float 			timeDelay = 1.5f;
+	public float			flightTime = 100;
+	public float			restTime = 5.0f;
+	public float 			maxSpeed = 5.0f;
+	public float endWaitTime = 5.0f;
+	public float startWaitTime;
+	public float startFlightTime;
+	public float endFlightTime = 10.0f;
+	public batState			curState;
+
 	
 	public Rigidbody		rig;
 	
@@ -37,42 +61,80 @@ public class bat : MonoBehaviour {
 	// Update is called once per frame
 	void Update(){
 		//still
-		if (curMode == Mode.attacked) {
-			print ("still");
-		} else if (curMode == Mode.walking) {
-			if(foundLocX && foundLocY)
-			{
-				targetX = Random.Range (34, 45);//change these to room limits
-				targetY = Random.Range (2, 9); // change these to room limits
-				print ("TargetX is " + targetX);
-				print ("TargetY is " + targetY);
+		if (numLocation >= 500  /*Time.time - startTime > flightTime*/) {
+//			print ("still");
+			numLocation = 0;
+			rig.velocity = Vector3.zero;
+			t = Time.time;
+			starting = true;
+
+		} else if (curMode == Mode.walking && Time.time - t > restTime) {
+			if (starting) {
+				startTime = Time.time;
+				starting = false;
+			}
+			if (foundLocX && foundLocY) {
+				int cornerX = Mathf.FloorToInt (Camera.main.transform.position.x - 4);
+				int cornerY = Mathf.FloorToInt (Camera.main.transform.position.y + 2);
+				targetX = Random.Range (cornerX, cornerX + 11);//change these to room limits
+				targetY = Random.Range (cornerY, cornerY - 6); // change these to room limits
+//				print ("TargetX is " + targetX);
+//				print ("TargetY is " + targetY);
 				foundLocX = false;
 				foundLocY = false;
+				numLocation++;
 			}
 
 			Vector3 curLoc = transform.position;
 
-			if (curLoc.y < targetY && !foundLocY) {
+			if (curLoc.y < targetY && curLoc.x < targetX && !foundLocY && !foundLocX) {
+				curDir = nineDir.NE;
+			} else if (curLoc.y < targetY && curLoc.x > targetX && !foundLocX && !foundLocY) {
+				curDir = nineDir.NW;
+			} else if (curLoc.y > targetY && curLoc.x > targetX && !foundLocX && !foundLocY) {
+				curDir = nineDir.SW;
+			} else if (curLoc.y > targetY && curLoc.x < targetX && !foundLocX && !foundLocY) {
+				curDir = nineDir.SE;
+			} else if (curLoc.y < targetY && !foundLocY) {
 				curDir = nineDir.N;
-			} 
-			else if (curLoc.y >= (targetY + 1) && !foundLocY) {
+			} else if (curLoc.y >= (targetY + 1) && !foundLocY) {
 				curDir = nineDir.S;
-			} 
-			else if (curLoc.x < targetX && !foundLocX) {
+			} else if (curLoc.x < targetX && !foundLocX) {
 				curDir = nineDir.E;
-			} 
-			else if (curLoc.x >= (targetX + 1) && !foundLocX) {
+			} else if (curLoc.x >= (targetX + 1) && !foundLocX) {
 				curDir = nineDir.W;
 			} 
-			if (curLoc.x >= targetX && curLoc.x < targetX + 1 && !foundLocX){
+			if (curLoc.x >= targetX && curLoc.x < targetX + 1 && !foundLocX) {
 				foundLocX = true;
 			} 
-			if (curLoc.y >= targetY && curLoc.y < targetY + 1 && !foundLocY){
+			if (curLoc.y >= targetY && curLoc.y < targetY + 1 && !foundLocY) {
 				foundLocY = true;
 			}
 
-
-		
+			//Handles acc in the begining and the end of the flight
+			if (curState == batState.go_up) {
+				curSpeed += .1f;
+				if (curSpeed >= maxSpeed) {
+					curState = batState.flying;
+					curSpeed = maxSpeed;
+					startFlightTime = Time.time;
+				}
+			} else if (curState == batState.flying) {
+				if (Time.time - startFlightTime > endFlightTime) {
+					curState = batState.slowDown;
+				}
+			} else if (curState == batState.slowDown) {
+				curSpeed -= .1f;
+				if (curSpeed <= 0) {
+					curSpeed = 0;
+					curState = batState.stopped;
+					startWaitTime = Time.time;
+				}
+			} else if (curState == batState.stopped) {
+				if (Time.time - startWaitTime > endWaitTime){
+					curState = batState.go_up;
+				}
+			}
 
 
 			Vector3 newVel = Vector3.zero;
@@ -97,6 +159,16 @@ public class bat : MonoBehaviour {
 			}
 	
 			rig.velocity = newVel;
+		}
+	}
+
+	void OnTriggerEnter(Collider coll){
+		Debug.Log ("Bat hit" + coll.name);
+
+		if (coll.name == "link") {
+			//decrease link's health
+		} else if (coll.name == "wooden_sword(Clone)") {
+			Destroy(this.gameObject);
 		}
 	}
 

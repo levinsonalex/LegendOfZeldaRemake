@@ -1,12 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum Mode{
-	walking, attacked
-};
-
-public class enemy : MonoBehaviour {
-
+public class Extra : MonoBehaviour {
+	
 	Random random = new Random();
 	
 	public int 				movingSpeed = 2;
@@ -29,13 +25,11 @@ public class enemy : MonoBehaviour {
 	public bool						getSpeed = true;
 	Vector3 oldPos = Vector3.zero;
 	Vector3 newPos = Vector3.zero;
-	public float						timeDelay = 10;
+	public float						timeDelay = 2;
 	
 	public int oldX;
 	public int oldY;
 	public bool move = true;
-
-
 	// Use this for initialization
 	void Start () {
 		curSpeed = movingSpeed;
@@ -48,9 +42,17 @@ public class enemy : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (curMode == Mode.walking) {	
-			dirMovement (transform.position);
+		if (curMode == Mode.walking) {
+			dirMovement(transform.position);
 		}
+		//stopped
+		else if (curMode == Mode.attacked)
+		{
+			if(Time.time - t < timeDelay){
+				curMode = Mode.walking;
+			}
+		}
+		
 	}
 	bool checkNextTo(float x, float y){
 		return ShowMapOnCamera.MAP [Mathf.RoundToInt (x), Mathf.FloorToInt (y)] == 29;
@@ -60,10 +62,10 @@ public class enemy : MonoBehaviour {
 		
 		if (curDirection == Direction.NORTH) {
 			if (checkNextTo(Mathf.RoundToInt(curPos.x),Mathf.FloorToInt(curPos.y + 1))) {
-//				Debug.Log ("Can move north");
+				print ("Can move north");
 				moveFunc (Vector3.up, curPos);
 			} else {
-//				Debug.Log ("Can't move North");
+				print ("Can't move North");
 				rig.velocity = Vector3.zero;
 				curPos.y = Mathf.Floor (curPos.y);
 				transform.position = curPos;
@@ -71,10 +73,10 @@ public class enemy : MonoBehaviour {
 			}
 		} else if (curDirection == Direction.EAST) {
 			if (checkNextTo(Mathf.FloorToInt(curPos.x + 1), Mathf.RoundToInt(curPos.y))) {
-//				Debug.Log ("Can move east");
+				print ("Can move east");
 				moveFunc (Vector3.right, curPos);
 			} else {
-//				Debug.Log (" Can't move east");
+				print (" Can't move east");
 				rig.velocity = Vector3.zero;
 				curPos.x = Mathf.Floor (curPos.x);
 				transform.position = curPos;
@@ -83,10 +85,10 @@ public class enemy : MonoBehaviour {
 			}
 		} else if (curDirection == Direction.SOUTH) {
 			if (checkNextTo(Mathf.RoundToInt(curPos.x),Mathf.CeilToInt(curPos.y - 1))) {
-//				Debug.Log ("Can move south");
+				print ("Can move south");
 				moveFunc (Vector3.down, curPos);
 			} else {
-//				Debug.Log ("can't move south");
+				print ("can't move south");
 				rig.velocity = Vector3.zero;
 				curPos.y = Mathf.Ceil (curPos.y);
 				transform.position = curPos;
@@ -94,10 +96,10 @@ public class enemy : MonoBehaviour {
 			}
 		} else if (curDirection == Direction.WEST) {
 			if (checkNextTo(Mathf.CeilToInt(curPos.x - 1),Mathf.RoundToInt(curPos.y))) {
-//				Debug.Log ("Can move west");
+				print ("Can move west");
 				moveFunc (Vector3.left, curPos);
 			} else {
-//				Debug.Log ("can't move west");
+				print ("can't move west");
 				rig.velocity = Vector3.zero;
 				curPos.x = Mathf.Ceil (curPos.x);
 				transform.position = curPos;
@@ -109,8 +111,7 @@ public class enemy : MonoBehaviour {
 	
 	
 	void moveFunc(Vector3 newVelo, Vector3 curLoca){
-		//Checks to see if the enemy should be moving
-		//if it should then record the old position
+		
 		if (move) {
 			oldPos = transform.position;
 			move = false;
@@ -142,10 +143,6 @@ public class enemy : MonoBehaviour {
 		while (curDirection == oldDir) {
 			curDirection = (Direction)Random.Range (0, 3);
 		}
-	}
-
-	void OnTriggerEnter(Collider other){
-		print (other.gameObject.name);
 	}
 	
 	

@@ -171,12 +171,13 @@ public class StateLinkNormalMovement : State
 	{
 		float horizontal_input = Input.GetAxis("Horizontal");
 		float vertical_input = Input.GetAxis("Vertical");
-
+		//if horizontal input 
 		if(horizontal_input != 0.0f)
-		{
+		{	//checks to see if it ends on a 0 or 5
 			if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 0 && Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) != 5)
 			{
 				//Debug.Log("Not Y aligned! - " + Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5));
+
 				vertical_input = .75f;
 				if (Mathf.Round((pc.GetComponent<Transform>().position.y * 10) % 5) < 2.5)
 				{
