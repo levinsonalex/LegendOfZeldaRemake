@@ -284,13 +284,21 @@ public class StateLinkAttack : State
 		new_weapon_rotation.eulerAngles = direction_eulerAngle;
 		weapon_instance.transform.rotation = new_weapon_rotation;
 
-        if (pc.curHealth == pc.maxHealth && GameObject.FindGameObjectWithTag("Beam") == null)
+        if (pc.curHealth == pc.maxHealth && weapon_prefab.gameObject.tag == "Sword" && GameObject.FindGameObjectWithTag("Beam") == null)
         {
             beam = Object.Instantiate(pc.beam_prefab, pc.transform.position, Quaternion.identity) as GameObject;
             beam.transform.position += direction_offset;
             beam.transform.rotation = new_weapon_rotation;
 
             beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+        }
+        else if(weapon_prefab.gameObject.name == "wooden_bow")
+        {
+            GameObject arrow = Object.Instantiate(pc.arrow_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            arrow.transform.position += direction_offset;
+            arrow.transform.rotation = new_weapon_rotation;
+
+            arrow.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
         }
     }
 

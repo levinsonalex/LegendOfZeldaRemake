@@ -35,6 +35,7 @@ public class PlayerControl : MonoBehaviour {
     public GameObject bow_prefab;
     public GameObject boomerang_prefab;
     public GameObject beam_prefab;
+    public GameObject arrow_prefab;
 
     public bool hasBoomerang = false;
     public bool hasBow = false;
