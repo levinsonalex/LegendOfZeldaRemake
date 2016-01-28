@@ -36,10 +36,10 @@ public class Hud : MonoBehaviour {
 	void Update()
 	{
 		int num_player_rupees = PlayerControl.instance.rupee_count;
-//		Rupee_Text.text = " × " + num_player_rupees;
+		Rupee_Text.text = " × " + num_player_rupees;
 
 		int num_player_keys = PlayerControl.instance.key_count;
-//		Key_Text.text = " × " + num_player_keys;
+		Key_Text.text = " × " + num_player_keys;
 
 		int num_player_hearts = PlayerControl.instance.curHealth;
 		Heart_Text.text = " × " + num_player_hearts;
