@@ -231,7 +231,8 @@ public class StateLinkNormalMovement : State
 public class StateLinkAttack : State
 {
 	PlayerControl pc;
-	GameObject weapon_prefab;
+    GameObject beam;
+    GameObject weapon_prefab;
 	GameObject weapon_instance;
 	float cooldown = 0.0f;
 
@@ -249,8 +250,8 @@ public class StateLinkAttack : State
 		pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
 		weapon_instance = Object.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
-
-		Vector3 direction_offset = Vector3.zero;
+ 
+        Vector3 direction_offset = Vector3.zero;
 		Vector3 direction_eulerAngle = Vector3.zero;
 
 		if(pc.current_direction == Direction.NORTH)
@@ -278,7 +279,16 @@ public class StateLinkAttack : State
 		Quaternion new_weapon_rotation = new Quaternion();
 		new_weapon_rotation.eulerAngles = direction_eulerAngle;
 		weapon_instance.transform.rotation = new_weapon_rotation;
-	}
+
+        if (pc.curHealth == pc.maxHealth && GameObject.FindGameObjectWithTag("Beam") == null)
+        {
+            beam = Object.Instantiate(pc.beam_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            beam.transform.position += direction_offset;
+            beam.transform.rotation = new_weapon_rotation;
+
+            beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+        }
+    }
 
 	public override void OnUpdate(float time_delta_fraction)
 	{
@@ -387,6 +397,7 @@ public class StateLinkTransition : State
 
 		pc.transform.position = new Vector3(pc.transform.position.x, pc.transform.position.y, 0);
 		ShowMapOnCamera.S.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        ShowMapOnCamera.S.transform.position = camFinalPos;
 
 		Debug.Log("X:" + pc.roomX + " Y:" + pc.roomY);
 		pc.roomHandle(pc.roomX, pc.roomY);

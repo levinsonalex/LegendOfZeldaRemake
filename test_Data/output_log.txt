@@ -14,62 +14,13 @@ Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Da
 Loading C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.056 seconds
+Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+- Completed reload, in  0.062 seconds
 Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Alex\Documents\GitHub\W16_Zelda_AlexLevinson\test_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1080 60Hz; virtual: 3520x1080 at -1600,0
 <RI> Initializing input.
 <RI> Input initialized.
-<RI> Initialized touch support.
-UnloadTime: 0.589353 ms
-Setting up 2 worker threads for Enlighten.
-  Thread -> id: a30 -> priority: 1 
-  Thread -> id: 3aac -> priority: 1 
-041x005
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-041x005
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-039x009
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-040x009
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-036x028
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-033x028
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-033x026
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-023x031
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-024x031
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-017x038
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-017x037
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-
-WizardNFire
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 37)
-

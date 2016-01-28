@@ -75,8 +75,9 @@ public class Tile : MonoBehaviour {
 			bc.gameObject.AddComponent<Rigidbody>();
 			bc.gameObject.GetComponent<Rigidbody>().useGravity = false;
 			bc.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            bc.gameObject.layer = 10;
         }
-		else if(bc.gameObject.name == "022x060")
+        else if(bc.gameObject.name == "022x060")
 		{
 			bc.center = Vector3.zero;
 			bc.size = Vector3.one;
@@ -85,12 +86,20 @@ public class Tile : MonoBehaviour {
 			bc.gameObject.AddComponent<Rigidbody>();
 			bc.gameObject.GetComponent<Rigidbody>().useGravity = false;
 			bc.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
-		}
-		else if(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_99")
+            bc.gameObject.layer = 10;
+        }
+        else if(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_99")
 		{
 			bc.gameObject.tag = "Untagged";
 			bc.enabled = false;
 		}
+        else if(c == 'F')
+        {
+            bc.center = Vector3.zero;
+            bc.size = Vector3.one;
+            bc.gameObject.tag = "Flyable";
+            bc.gameObject.layer = 10;
+        }
         else if (c == 'S') // Solid
         {
             bc.center = Vector3.zero;
