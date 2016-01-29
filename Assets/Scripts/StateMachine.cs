@@ -258,10 +258,16 @@ public class StateLinkAttack : State
 
 	public override void OnStart()
 	{
-		pc.current_state = EntityState.ATTACKING;
 
-		pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
- 
+        if (pc == null) //Boomerang catch workaround.
+        {
+            PlayerControl.instance.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            return;
+        }
+		pc.current_state = EntityState.ATTACKING;
+        pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+
         Vector3 direction_offset = Vector3.zero;
 		Vector3 direction_eulerAngle = Vector3.zero;
 
@@ -301,7 +307,7 @@ public class StateLinkAttack : State
             beam.transform.position += direction_offset;
             beam.transform.rotation = new_weapon_rotation;
 
-            beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+            beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.projectile_velocity;
         }
         else if(weapon_prefab == pc.bow_prefab && GameObject.FindGameObjectWithTag("Arrow") == null)
         {
@@ -309,7 +315,7 @@ public class StateLinkAttack : State
             arrow.transform.position += direction_offset;
             arrow.transform.rotation = new_weapon_rotation;
 
-            arrow.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+            arrow.GetComponent<Rigidbody>().velocity = direction_offset * pc.projectile_velocity;
         }
         else if(weapon_prefab == pc.boomerang_prefab && GameObject.FindGameObjectWithTag("Boomerang") == null)
         {
@@ -317,7 +323,7 @@ public class StateLinkAttack : State
             boomerang.transform.position += direction_offset;
             boomerang.transform.rotation = new_weapon_rotation;
 
-            boomerang.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+            boomerang.GetComponent<Rigidbody>().velocity = direction_offset * pc.boomerang_velocity;
         }
     }
 
@@ -332,6 +338,10 @@ public class StateLinkAttack : State
 
 	public override void OnFinish()
 	{
+        if(pc == null) //Boomerang catch workaround
+        {
+            return;
+        }
 		pc.current_state = EntityState.NORMAL;
         if (weapon_instance != null && weapon_instance.gameObject.name != "wooden_boomerang(Clone)")
         {

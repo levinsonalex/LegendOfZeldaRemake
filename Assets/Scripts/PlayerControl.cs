@@ -43,7 +43,8 @@ public class PlayerControl : MonoBehaviour {
     public bool hasMap = false;
 
 	public float walking_velocity = 1.0f;
-    public float beam_velocity = 1.0f;
+    public float projectile_velocity = 1.0f;
+    public float boomerang_velocity = 5.0f;
 	public int rupee_count = 0;
 	public int key_count = 0;
 	public int bomb_count = 0;
@@ -461,4 +462,9 @@ public class PlayerControl : MonoBehaviour {
 			eastMostTypewriterOnSwitch = true;
 		}
 	}
+
+    public void catchBoomerang()
+    {
+        control_state_machine.ChangeState(new StateLinkAttack(null, null, 10));
+    }
 }
