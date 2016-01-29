@@ -228,7 +228,15 @@ public class StateLinkNormalMovement : State
 		}
 		else if (pc.selected_weapon_prefab != null && Input.GetKeyDown(KeyCode.S))
 		{
-			state_machine.ChangeState(new StateLinkAttack(pc, pc.selected_weapon_prefab, 15));
+            if (pc.selected_weapon_prefab == pc.bow_prefab && pc.rupee_count > 0)
+            {
+                pc.rupee_count--;
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.bow_prefab, 15));
+            } 
+            else if(pc.selected_weapon_prefab == pc.boomerang_prefab)
+            {
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.boomerang_prefab, 15));
+            }
 		}
 	}
 }
@@ -253,8 +261,6 @@ public class StateLinkAttack : State
 		pc.current_state = EntityState.ATTACKING;
 
 		pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
-
-		weapon_instance = Object.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
  
         Vector3 direction_offset = Vector3.zero;
 		Vector3 direction_eulerAngle = Vector3.zero;
@@ -280,11 +286,15 @@ public class StateLinkAttack : State
 			direction_eulerAngle = new Vector3(0, 0, 180);
 		}
 
-		weapon_instance.transform.position += direction_offset;
-		Quaternion new_weapon_rotation = new Quaternion();
-		new_weapon_rotation.eulerAngles = direction_eulerAngle;
-		weapon_instance.transform.rotation = new_weapon_rotation;
+        Quaternion new_weapon_rotation = new Quaternion();
+        new_weapon_rotation.eulerAngles = direction_eulerAngle;
 
+        if (weapon_prefab == pc.sword_prefab || (weapon_prefab == pc.bow_prefab && GameObject.FindGameObjectWithTag("Arrow") == null))
+        {
+            weapon_instance = Object.Instantiate(weapon_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            weapon_instance.transform.position += direction_offset;
+            weapon_instance.transform.rotation = new_weapon_rotation;
+        }
         if (pc.curHealth == pc.maxHealth && weapon_prefab.gameObject.tag == "Sword" && GameObject.FindGameObjectWithTag("Beam") == null)
         {
             beam = Object.Instantiate(pc.beam_prefab, pc.transform.position, Quaternion.identity) as GameObject;
@@ -293,13 +303,21 @@ public class StateLinkAttack : State
 
             beam.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
         }
-        else if(weapon_prefab.gameObject.name == "wooden_bow")
+        else if(weapon_prefab == pc.bow_prefab && GameObject.FindGameObjectWithTag("Arrow") == null)
         {
             GameObject arrow = Object.Instantiate(pc.arrow_prefab, pc.transform.position, Quaternion.identity) as GameObject;
             arrow.transform.position += direction_offset;
             arrow.transform.rotation = new_weapon_rotation;
 
             arrow.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
+        }
+        else if(weapon_prefab == pc.boomerang_prefab && GameObject.FindGameObjectWithTag("Boomerang") == null)
+        {
+            GameObject boomerang = Object.Instantiate(pc.boomerang_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            boomerang.transform.position += direction_offset;
+            boomerang.transform.rotation = new_weapon_rotation;
+
+            boomerang.GetComponent<Rigidbody>().velocity = direction_offset * pc.beam_velocity;
         }
     }
 
@@ -315,7 +333,10 @@ public class StateLinkAttack : State
 	public override void OnFinish()
 	{
 		pc.current_state = EntityState.NORMAL;
-		Object.Destroy(weapon_instance);
+        if (weapon_instance != null && weapon_instance.gameObject.name != "wooden_boomerang(Clone)")
+        {
+            Object.Destroy(weapon_instance);
+        }
 	}
 }
 
