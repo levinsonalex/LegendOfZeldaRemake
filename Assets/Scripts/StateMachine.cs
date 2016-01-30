@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityEngine.UI;
 
 // State Machines are responsible for processing states, notifying them when they're about to begin or conclude, etc.
 public class StateMachine
@@ -237,6 +238,10 @@ public class StateLinkNormalMovement : State
             {
                 state_machine.ChangeState(new StateLinkAttack(pc, pc.boomerang_prefab, 15));
             }
+            else if(pc.selected_weapon_prefab == pc.bomb_prefab)
+            {
+                state_machine.ChangeState(new StateLinkAttack(pc, pc.bomb_prefab, 10));
+            }
 		}
 	}
 }
@@ -324,6 +329,28 @@ public class StateLinkAttack : State
             boomerang.transform.rotation = new_weapon_rotation;
 
             boomerang.GetComponent<Rigidbody>().velocity = direction_offset * pc.boomerang_velocity;
+        }
+        else if(weapon_prefab == pc.bomb_prefab && pc.bomb_count > 0)
+        {
+            pc.bomb_count--;
+            GameObject bomb = Object.Instantiate(pc.bomb_prefab, pc.transform.position, Quaternion.identity) as GameObject;
+            bomb.transform.position += direction_offset;
+
+            if (pc.bomb_count <= 0)
+            {
+                Hud.instance.cursorLocations.Remove(0);
+                Hud.instance.Bomb_Inv.GetComponent<Image>().color = new Color(64f/255f, 64f/255f, 64f/255f, 1);
+
+                float localCursorLoc = pc.getNextCursorLocation();
+                if (Hud.instance.cursorLocations.Count != 0)
+                {
+                    Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(localCursorLoc, Hud.instance.Cursor_Inv.transform.localPosition.y, 0);
+                }
+                else
+                {
+                    Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = false;
+                }
+            }
         }
     }
 

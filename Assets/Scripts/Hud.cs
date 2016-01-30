@@ -9,6 +9,7 @@ public class Hud : MonoBehaviour {
 	public Text Rupee_Text;
 	public Text Key_Text;
 	public Text Heart_Text;
+    public Text Bomb_Text;
     public GameObject Compass_Inv;
     public GameObject Map_Inv;
     public GameObject Sword_Inv;
@@ -17,6 +18,7 @@ public class Hud : MonoBehaviour {
 	public GameObject LHeartPrefab;
 	public GameObject RHeartPrefab;
     public GameObject Cursor_Inv;
+    public GameObject Bomb_Inv;
     public List<float> cursorLocations;
     public int cursorIndex = 0;
 
@@ -44,17 +46,29 @@ public class Hud : MonoBehaviour {
 		int num_player_hearts = PlayerControl.instance.curHealth;
 		Heart_Text.text = " × " + num_player_hearts;
 
-		if (Cursor_Inv.GetComponent<Image>().enabled)
+        int num_player_bombs = PlayerControl.instance.bomb_count;
+        Bomb_Text.text = " × " + num_player_bombs;
+
+        if (Cursor_Inv.GetComponent<Image>().enabled)
 		{
-			if (cursorLocations[cursorIndex] == -25)
+            if (num_player_bombs > 0)
+            {
+                Bomb_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
+                PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.bomb_prefab;
+            }
+            if (cursorLocations[cursorIndex] == -50)
 			{
 				PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.bow_prefab;
 			}
-			else if (cursorLocations[cursorIndex] == 25)
+			else if (cursorLocations[cursorIndex] == 50)
 			{
 				PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.boomerang_prefab;
 			}
-			else
+			else if (cursorLocations[cursorIndex] == 0)
+            {
+                PlayerControl.instance.selected_weapon_prefab = PlayerControl.instance.bomb_prefab;
+            }
+            else
 			{
 				Debug.Log("Broken cursor.");
 			}

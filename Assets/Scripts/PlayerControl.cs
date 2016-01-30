@@ -36,6 +36,7 @@ public class PlayerControl : MonoBehaviour {
     public GameObject boomerang_prefab;
     public GameObject beam_prefab;
     public GameObject arrow_prefab;
+    public GameObject bomb_prefab;
 
     public bool hasBoomerang = false;
     public bool hasBow = false;
@@ -102,14 +103,10 @@ public class PlayerControl : MonoBehaviour {
 
 		if (Input.GetKeyDown(KeyCode.RightShift) && pause)
 		{
-			Hud.instance.cursorIndex++;
-			if (Hud.instance.cursorIndex >= Hud.instance.cursorLocations.Count)
-			{
-				Hud.instance.cursorIndex = 0;
-			}
+            float localCursorLoc = getNextCursorLocation();
 			if (Hud.instance.cursorLocations.Count != 0)
 			{
-				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(Hud.instance.cursorLocations[Hud.instance.cursorIndex], Hud.instance.Cursor_Inv.transform.localPosition.y, 0);
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(localCursorLoc, Hud.instance.Cursor_Inv.transform.localPosition.y, 0);
 			}
 		}
 
@@ -163,36 +160,52 @@ public class PlayerControl : MonoBehaviour {
         {
             Destroy(coll.gameObject);
             hasMap = true;
-            Hud.instance.Map_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+            Hud.instance.Map_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
         }
         else if(coll.gameObject.tag == "Compass")
         {
             Destroy(coll.gameObject);
             hasCompass = true;
-            Hud.instance.Compass_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
+            Hud.instance.Compass_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
         }
         else if(coll.gameObject.tag == "Bow")
         {
 			Destroy(coll.gameObject);
             hasBow = true;
-            Hud.instance.Bow_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
-            Hud.instance.cursorLocations.Add(-25);
+            Hud.instance.Bow_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
+            Hud.instance.cursorLocations.Add(-50);
 			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
 			{
 				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
-				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(-25, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(-50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
 			}
 		}
-		else if(coll.gameObject.tag == "Boomerang")
+        else if (coll.gameObject.tag == "Bomb")
+        {
+            Destroy(coll.gameObject);
+            if (bomb_count == 0)
+            {
+                Hud.instance.Bomb_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
+                Hud.instance.cursorLocations.Add(0);
+            }
+
+            bomb_count++;
+            if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
+            {
+                Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
+                Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(0, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+            }
+        }
+        else if(coll.gameObject.tag == "Boomerang")
         {
 			Destroy(coll.gameObject);
             hasBoomerang = true;
             Hud.instance.Boomerang_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
-            Hud.instance.cursorLocations.Add(25);
+            Hud.instance.cursorLocations.Add(50);
 			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
 			{
 				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
-				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(25, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
 			}
 		}
 		else if(coll.gameObject.name == "080x049")
@@ -466,5 +479,19 @@ public class PlayerControl : MonoBehaviour {
     public void catchBoomerang()
     {
         control_state_machine.ChangeState(new StateLinkAttack(null, null, 10));
+    }
+
+    public float getNextCursorLocation()
+    {
+        if (Hud.instance.cursorLocations.Count > 0)
+        {
+            Hud.instance.cursorIndex++;
+            if (Hud.instance.cursorIndex >= Hud.instance.cursorLocations.Count)
+            {
+                Hud.instance.cursorIndex = 0;
+            }
+            return Hud.instance.cursorLocations[Hud.instance.cursorIndex];
+        } 
+        return -1000;
     }
 }
