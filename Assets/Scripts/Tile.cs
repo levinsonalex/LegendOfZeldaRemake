@@ -75,6 +75,7 @@ public class Tile : MonoBehaviour {
 			bc.gameObject.AddComponent<Rigidbody>();
 			bc.gameObject.GetComponent<Rigidbody>().useGravity = false;
 			bc.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            bc.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             bc.gameObject.layer = 10;
         }
         else if(bc.gameObject.name == "022x060")
@@ -86,6 +87,7 @@ public class Tile : MonoBehaviour {
 			bc.gameObject.AddComponent<Rigidbody>();
 			bc.gameObject.GetComponent<Rigidbody>().useGravity = false;
 			bc.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            bc.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             bc.gameObject.layer = 10;
         }
         else if(bc.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_99")

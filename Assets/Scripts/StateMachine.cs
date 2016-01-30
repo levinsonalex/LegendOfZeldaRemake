@@ -349,6 +349,7 @@ public class StateLinkAttack : State
                 else
                 {
                     Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = false;
+                    pc.selected_weapon_prefab = null;
                 }
             }
         }

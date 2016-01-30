@@ -362,7 +362,7 @@ public class PlayerControl : MonoBehaviour {
 					control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("017x038").gameObject));
 				}
 			}
-			if(coll.gameObject.name == "022x060" && Mathf.Abs(coll.gameObject.transform.position.y-60) < 1)
+			if(coll.gameObject.name == "022x060" && Mathf.Abs(coll.gameObject.transform.position.y - 60) < 1)
 			{
 				if (Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
 				{
@@ -370,14 +370,20 @@ public class PlayerControl : MonoBehaviour {
 					{
 						control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
 					}
-					else
-					{
-						control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
-					}
 				}
 			}
 		}
-		else
+        else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")
+        {
+            transform.position = new Vector3(96f, 8.5f, 0);
+            GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(100.4f, 6.4f, -10);
+        }
+        else if(coll.gameObject.name == "2DRoomExit")
+        {
+            transform.position = new Vector3(22f, 59f, 0);
+            GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(23.5f, 61.4f, -10);
+        }
+        else
 		{
 			print(coll.collider.name);
 			doorTouch = false;
