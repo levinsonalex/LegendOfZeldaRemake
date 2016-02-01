@@ -6,6 +6,8 @@ public class BoomerangScript : MonoBehaviour
 {
 
     public Vector3 initialLocation;
+    public GameObject bombExplosion;
+    private bool bombGrab = false;
     public bool turnAround = false;
 
     // Use this for initialization
@@ -35,6 +37,10 @@ public class BoomerangScript : MonoBehaviour
     {
         if (coll.gameObject.tag == "Player")
         {
+            if (bombGrab)
+            {
+                Instantiate(bombExplosion, PlayerControl.instance.transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
             PlayerControl.instance.catchBoomerang();
         }
@@ -83,6 +89,7 @@ public class BoomerangScript : MonoBehaviour
         else if (coll.gameObject.tag == "Bomb")
         {
             Destroy(coll.gameObject);
+            bombGrab = true;
             PlayerControl.instance.curHealth -= 1;
         }
     }
