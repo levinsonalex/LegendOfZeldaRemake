@@ -484,6 +484,94 @@ public class PlayerControl : MonoBehaviour {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
             }
+            if (customMap && coll.gameObject.name == "035x038" && coll.gameObject.transform.position.x < 36) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "035x036" && coll.gameObject.transform.position.y > 35) // Down
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "037x036" && coll.gameObject.transform.position.x < 38) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "037x038" && coll.gameObject.transform.position.y < 39) // Up
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "039x038" && coll.gameObject.transform.position.x < 40) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "039x036" && coll.gameObject.transform.position.y > 35) // Down
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "041x036" && coll.gameObject.transform.position.x < 42) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "041x038" && coll.gameObject.transform.position.y < 39) // Up
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "043x038" && coll.gameObject.transform.position.x < 44) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "043x040" && coll.gameObject.transform.position.y < 41) // Up
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "041x040" && coll.gameObject.transform.position.x > 40) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
             #endregion CustomDungeon
         }
         else if(!customMap && coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")

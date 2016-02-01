@@ -85,7 +85,18 @@ public class Tile : MonoBehaviour {
              bc.gameObject.name == "021x040" || //R
              bc.gameObject.name == "026x040" || //R
              bc.gameObject.name == "019x038" || //U
-             bc.gameObject.name == "028x038" //D
+             bc.gameObject.name == "028x038" || //D
+             bc.gameObject.name == "035x038" || //R <--
+             bc.gameObject.name == "035x036" || //D
+             bc.gameObject.name == "037x036" || //R
+             bc.gameObject.name == "037x038" || //U
+             bc.gameObject.name == "039x038" || //R
+             bc.gameObject.name == "039x036" || //D
+             bc.gameObject.name == "041x036" || //R
+             bc.gameObject.name == "041x038" || //U
+             bc.gameObject.name == "043x038" || //R
+             bc.gameObject.name == "043x040" || //U
+             bc.gameObject.name == "041x040" //L
              )) //bc.gameObject.name == "x" ||
         {
             setPushableCollider(ref bc);
