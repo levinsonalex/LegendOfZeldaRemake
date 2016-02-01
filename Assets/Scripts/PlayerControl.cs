@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
-public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING, DAMAGED, MOVING};
+public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING, DAMAGED, MOVING, STUNNED};
 
 public class PlayerControl : MonoBehaviour {
     #region Class Variables
@@ -642,12 +642,15 @@ public class PlayerControl : MonoBehaviour {
     {
         if (!customMap)
         {
-            string roomString = string.Format("{0:000}x{1:000}y", x, y);
             if (x ==  1 && y == 0 ||
                 x == -1 && y == 0 ||
                 x ==  0 && y == 1 ||
                 x ==  0 && y == 2 ||
-                x ==  1 && y == 2)
+                x ==  1 && y == 2 ||
+                x == -1 && y == 2 ||
+                x == -1 && y == 3 ||
+                x ==  0 && y == 3 ||
+                x ==  0 && y == 4)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if (roomObject)
@@ -670,7 +673,11 @@ public class PlayerControl : MonoBehaviour {
                 x == -1 && y == 0 ||
                 x ==  0 && y == 1 ||
                 x ==  0 && y == 2 ||
-                x ==  1 && y == 2)
+                x ==  1 && y == 2 ||
+                x == -1 && y == 2 ||
+                x == -1 && y == 3 ||
+                x ==  0 && y == 3 ||
+                x == 0 && y == 4)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if(roomObject)

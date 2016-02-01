@@ -11,9 +11,20 @@ public class RoomScript : MonoBehaviour {
     {
         if (drop != null)
         {
-            if(enemiesList.Count == 0)
+            if (enemiesList.Count == 0)
             {
                 drop.SetActive(true);
+            }
+        }
+        if (unlock != null)
+        {
+            if(enemiesList.Count > 0)
+            {
+                unlock.SetActive(true);
+            }
+            else
+            {
+                unlock.SetActive(false);
             }
         }
     }

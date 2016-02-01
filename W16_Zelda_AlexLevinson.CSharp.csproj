@@ -78,6 +78,7 @@
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\Extra.cs" />
+    <Compile Include="Assets\Scripts\GelScript.cs" />
     <Compile Include="Assets\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\ParseZeldaMap.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />

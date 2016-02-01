@@ -819,6 +819,37 @@ public class StateEnemyDamaged : State
         enemyObj.current_state = EntityState.NORMAL;
     }
 }
+
+public class StateEnemyStunned : State
+{
+    EnemyScript enemyObj;
+    float cooldown = 15;
+
+    public StateEnemyStunned(EnemyScript enemyObj)
+    {
+        this.enemyObj = enemyObj;
+    }
+
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.STUNNED;
+        enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        cooldown -= time_delta_fraction;
+        if (cooldown <= 0)
+        {
+            ConcludeState();
+        }
+    }
+
+    public override void OnFinish()
+    {
+        enemyObj.current_state = EntityState.NORMAL;
+    }
+}
 // Additional recommended states:
 // StateDeath
 // StateDamaged
