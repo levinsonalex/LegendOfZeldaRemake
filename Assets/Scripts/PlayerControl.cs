@@ -7,7 +7,7 @@ public enum Direction {NORTH, EAST, SOUTH, WEST};
 public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING, DAMAGED, MOVING};
 
 public class PlayerControl : MonoBehaviour {
-
+    #region Class Variables
     public static bool customMap = false;
     public bool customMapToggle = false;
 
@@ -68,6 +68,7 @@ public class PlayerControl : MonoBehaviour {
     public static PlayerControl instance;
 
     public Sprite[] mapSprites;
+    #endregion
 
     void Awake()
     {
@@ -641,20 +642,14 @@ public class PlayerControl : MonoBehaviour {
     {
         if (!customMap)
         {
-            if (x == 1 && y == 0)
+            string roomString = string.Format("{0:000}x{1:000}y", x, y);
+            if (x ==  1 && y == 0 ||
+                x == -1 && y == 0 ||
+                x ==  0 && y == 1 ||
+                x ==  0 && y == 2 ||
+                x ==  1 && y == 2)
             {
-                GameObject roomObject = GameObject.FindGameObjectWithTag("001x000y");
-                if (roomObject)
-                {
-                    foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
-                    {
-                        enemy.SetActive(false);
-                    }
-                }
-            }
-            if (x == -1 && y == 0)
-            {
-                GameObject roomObject = GameObject.FindGameObjectWithTag("-001x000y");
+                GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if (roomObject)
                 {
                     foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
@@ -670,21 +665,15 @@ public class PlayerControl : MonoBehaviour {
 	{
         if (!customMap)
         {
-            if(x == 1 && y == 0)
+            string roomString = string.Format("{0:000}x{1:000}y", x, y);
+            if (x ==  1 && y == 0 ||
+                x == -1 && y == 0 ||
+                x ==  0 && y == 1 ||
+                x ==  0 && y == 2 ||
+                x ==  1 && y == 2)
             {
-                GameObject roomObject = GameObject.Find("001x000y");
+                GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if(roomObject)
-                {
-                    foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
-                    {
-                        enemy.SetActive(true);
-                    }
-                }
-            }
-            if (x == -1 && y == 0)
-            {
-                GameObject roomObject = GameObject.Find("-001x000y");
-                if (roomObject)
                 {
                     foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
                     {

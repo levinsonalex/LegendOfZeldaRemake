@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ArrowScript.cs" />
+    <Compile Include="Assets\Scripts\BatScript.cs" />
     <Compile Include="Assets\Scripts\BeamScript.cs" />
     <Compile Include="Assets\Scripts\Beam_Explosion.cs" />
     <Compile Include="Assets\Scripts\BombExplosionScript.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\ParseZeldaMap.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />
+    <Compile Include="Assets\Scripts\RoomScript.cs" />
     <Compile Include="Assets\Scripts\ShowMap.cs" />
     <Compile Include="Assets\Scripts\ShowMapOnCamera.cs" />
     <Compile Include="Assets\Scripts\SkeletosScript.cs" />

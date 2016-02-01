@@ -69,6 +69,10 @@ public class EnemyScript : MonoBehaviour {
 
     public virtual void Damage(int dmg, GameObject damageFrom)
     {
+        if (invincible)
+        {
+            return;
+        }
         health -= dmg;
         if(health <= 0)
         {
