@@ -574,6 +574,87 @@ public class StateLinkPush : State
 		return false;
 	}
 }
+
+public class StateLinkDamaged : State
+{
+    PlayerControl pc;
+    GameObject damageSource;
+    int damage;
+    Direction knockbackDir;
+    float cooldown = 15;
+
+    public StateLinkDamaged(PlayerControl pc, GameObject damageSource, int damage)
+    {
+        this.pc = pc;
+        this.damageSource = damageSource;
+        this.damage = damage;
+        float xOffset = damageSource.transform.position.x - pc.transform.position.x;
+        float yOffset = damageSource.transform.position.y - pc.transform.position.y;
+        if (Mathf.Abs(xOffset) > Mathf.Abs(yOffset))
+        {
+            if (xOffset < 0)
+            {
+                knockbackDir = Direction.EAST;
+            }
+            else
+            {
+                knockbackDir = Direction.WEST;
+            }
+        }
+        else
+        {
+            if (yOffset < 0)
+            {
+                knockbackDir = Direction.NORTH;
+            }
+            else
+            {
+                knockbackDir = Direction.SOUTH;
+            }
+        }
+    }
+
+    public override void OnStart()
+    {
+        pc.curHealth -= damage;
+        pc.invincibleOn();
+        pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        cooldown -= time_delta_fraction;
+        if (cooldown <= 0)
+        {
+            ConcludeState();
+        }
+
+        if (knockbackDir == Direction.EAST)
+        {
+            pc.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0) * pc.knockback_velocity * time_delta_fraction;
+        }
+        else if (knockbackDir == Direction.WEST)
+        {
+            pc.GetComponent<Rigidbody>().velocity = new Vector3(-1, 0, 0) * pc.knockback_velocity * time_delta_fraction;
+        }
+        else if (knockbackDir == Direction.NORTH)
+        {
+            pc.GetComponent<Rigidbody>().velocity = new Vector3(0, 1, 0) * pc.knockback_velocity * time_delta_fraction;
+        }
+        else // West
+        {
+            pc.GetComponent<Rigidbody>().velocity = new Vector3(0, -1, 0) * pc.knockback_velocity * time_delta_fraction;
+        }
+    }
+
+    public override void OnFinish()
+    {
+        pc.invincibleOff();
+        pc.current_state = EntityState.NORMAL;
+    }
+}
+
+
 // Additional recommended states:
 // StateDeath
 // StateDamaged

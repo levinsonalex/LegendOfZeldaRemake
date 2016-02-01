@@ -84,7 +84,7 @@ public class bladetrapScript : MonoBehaviour {
 //			weapon_instance.transform.position += direction_offset;
 //			weapon_instance.transform.rotation = new_weapon_rotation;
 //		}
-//		if (pc.curHealth == pc.maxHealth && weapon_prefab.gameObject.tag == "Sword" && GameObject.FindGameObjectWithTag("Beam") == null)
+//		if (pc.== pc.maxHealth && weapon_prefab.gameObject.tag == "Sword" && GameObject.FindGameObjectWithTag("Beam") == null)
 //		{
 //			beam = Object.Instantiate(pc.beam_prefab, pc.transform.position, Quaternion.identity) as GameObject;
 //			beam.transform.position += direction_offset;

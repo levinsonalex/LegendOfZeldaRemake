@@ -49,6 +49,7 @@ public class PlayerControl : MonoBehaviour {
 	public float walking_velocity = 1.0f;
     public float projectile_velocity = 1.0f;
     public float boomerang_velocity = 5.0f;
+    public float knockback_velocity = 5.0f;
 	public int rupee_count = 0;
 	public int key_count = 0;
 	public int bomb_count = 0;
@@ -133,13 +134,12 @@ public class PlayerControl : MonoBehaviour {
         { 
 			if (invincible)
 			{
-				GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
-			}
+                invincibleOff();
+            }
 			else
 			{
-				GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
-			}
-			invincible = !invincible;
+                invincibleOn();
+            }
 		}
 	}
 
@@ -222,10 +222,11 @@ public class PlayerControl : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter(Collision coll)
+    void OnCollisionEnter(Collision coll)
 	{
-		//Left Door
-		if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_50")
+        #region Doors
+        //Left Door
+        if (coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_50")
 		{
 			if (!moveRoom)
 			{
@@ -355,8 +356,9 @@ public class PlayerControl : MonoBehaviour {
 			doorTouch = true;
 			firstTouch = coll.gameObject;
 		}
-		//Pushable Blocks
-		else if (coll.gameObject.CompareTag("Pushable"))
+#endregion
+        #region Pushable Blocks
+        else if (coll.gameObject.CompareTag("Pushable"))
 		{
             print("Pushable: " + coll.gameObject.name);
             #region RegularDungeon
@@ -383,7 +385,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "025x005" && coll.gameObject.transform.position.x < 26) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -391,7 +393,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "022x005" && coll.gameObject.transform.position.x > 21) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -399,7 +401,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "038x024" && coll.gameObject.transform.position.x < 39) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -407,7 +409,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "043x024" && coll.gameObject.transform.position.x < 44) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -415,7 +417,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "036x030" && coll.gameObject.transform.position.x > 35) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -423,7 +425,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "041x030" && coll.gameObject.transform.position.x > 40) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -431,7 +433,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "056x027" && coll.gameObject.transform.position.x > 55) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("049x027")));
                 }
@@ -439,7 +441,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "021x036" && coll.gameObject.transform.position.x > 20) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -447,7 +449,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "025x036" && coll.gameObject.transform.position.x > 24) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -455,7 +457,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "026x040" && coll.gameObject.transform.position.x < 27) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -463,7 +465,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "021x040" && coll.gameObject.transform.position.x < 22) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -471,7 +473,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "019x038" && coll.gameObject.transform.position.y < 39) // Up
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -479,7 +481,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "028x038" && coll.gameObject.transform.position.y > 37) // Down
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -487,7 +489,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "035x038" && coll.gameObject.transform.position.x < 36) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -495,7 +497,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "035x036" && coll.gameObject.transform.position.y > 35) // Down
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -503,7 +505,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "037x036" && coll.gameObject.transform.position.x < 38) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -511,7 +513,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "037x038" && coll.gameObject.transform.position.y < 39) // Up
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -519,7 +521,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "039x038" && coll.gameObject.transform.position.x < 40) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -527,7 +529,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "039x036" && coll.gameObject.transform.position.y > 35) // Down
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -535,7 +537,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "041x036" && coll.gameObject.transform.position.x < 42) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -543,7 +545,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "041x038" && coll.gameObject.transform.position.y < 39) // Up
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -551,7 +553,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "043x038" && coll.gameObject.transform.position.x < 44) // Right
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -559,7 +561,7 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "043x040" && coll.gameObject.transform.position.y < 41) // Up
             {
                 if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
@@ -567,14 +569,16 @@ public class PlayerControl : MonoBehaviour {
             if (customMap && coll.gameObject.name == "041x040" && coll.gameObject.transform.position.x > 40) // Left
             {
                 if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
-                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < 1)
                 {
                     control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
                 }
             }
             #endregion CustomDungeon
         }
-        else if(!customMap && coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")
+        #endregion
+        #region 2DRoom
+        else if (!customMap && coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")
         {
             transform.position = new Vector3(96f, 8.5f, 0);
             GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(100.4f, 6.4f, -10);
@@ -584,8 +588,20 @@ public class PlayerControl : MonoBehaviour {
             transform.position = new Vector3(22f, 59f, 0);
             GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(23.5f, 61.4f, -10);
         }
+        #endregion
+        #region Enemies
+        else if (!invincible && coll.gameObject.tag == "Enemy")
+        {
+            print("HIT ENEMY");
+            if(coll.gameObject.name == "FinalBoss")
+            {
+                print("FinalBoss hit.");
+                control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, 2));
+            }
+        }
+        #endregion
         else
-		{
+        {
 			print(coll.collider.name);
 			doorTouch = false;
 			firstTouch = null;
@@ -707,5 +723,17 @@ public class PlayerControl : MonoBehaviour {
             return Hud.instance.cursorLocations[Hud.instance.cursorIndex];
         } 
         return -1000;
+    }
+
+    public void invincibleOn()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+        invincible = true;
+    }
+
+    public void invincibleOff()
+    {
+        GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+        invincible = false;
     }
 }
