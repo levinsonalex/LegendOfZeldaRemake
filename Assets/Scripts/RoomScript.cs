@@ -6,4 +6,15 @@ public class RoomScript : MonoBehaviour {
     public List<GameObject> enemiesList;
     public GameObject drop;
     public GameObject unlock;
+
+    public void Update()
+    {
+        if (drop != null)
+        {
+            if(enemiesList.Count == 0)
+            {
+                drop.SetActive(true);
+            }
+        }
+    }
 }

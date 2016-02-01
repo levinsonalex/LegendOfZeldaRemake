@@ -747,15 +747,13 @@ public class StateEnemyDamaged : State
 {
     EnemyScript enemyObj;
     GameObject damageSource;
-    int damage;
     Direction knockbackDir;
     float cooldown = 15;
 
-    public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource, int damage)
+    public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource)
     {
         this.enemyObj = enemyObj;
         this.damageSource = damageSource;
-        this.damage = damage;
         float xOffset = damageSource.transform.position.x - enemyObj.transform.position.x;
         float yOffset = damageSource.transform.position.y - enemyObj.transform.position.y;
         if (Mathf.Abs(xOffset) > Mathf.Abs(yOffset))
@@ -785,7 +783,6 @@ public class StateEnemyDamaged : State
     public override void OnStart()
     {
         enemyObj.current_state = EntityState.DAMAGED;
-        enemyObj.health -= damage;
         enemyObj.invincibleOn();
         enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }

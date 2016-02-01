@@ -69,7 +69,7 @@ public class EnemyScript : MonoBehaviour {
 
     public virtual void Damage(int dmg, GameObject damageFrom)
     {
-        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom, 1));
+        health -= dmg;
         if(health <= 0)
         {
             if (Random.Range(0, 2) == 1)
@@ -98,6 +98,7 @@ public class EnemyScript : MonoBehaviour {
             GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
             Destroy(gameObject);
         }
+        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom));
     }
 
     public void invincibleOn()

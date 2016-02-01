@@ -652,6 +652,17 @@ public class PlayerControl : MonoBehaviour {
                     }
                 }
             }
+            if (x == -1 && y == 0)
+            {
+                GameObject roomObject = GameObject.FindGameObjectWithTag("-001x000y");
+                if (roomObject)
+                {
+                    foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        enemy.SetActive(false);
+                    }
+                }
+            }
         }
     }
 
@@ -661,8 +672,19 @@ public class PlayerControl : MonoBehaviour {
         {
             if(x == 1 && y == 0)
             {
-                GameObject roomObject = GameObject.FindGameObjectWithTag("001x000y");
+                GameObject roomObject = GameObject.Find("001x000y");
                 if(roomObject)
+                {
+                    foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        enemy.SetActive(true);
+                    }
+                }
+            }
+            if (x == -1 && y == 0)
+            {
+                GameObject roomObject = GameObject.Find("-001x000y");
+                if (roomObject)
                 {
                     foreach (GameObject enemy in roomObject.GetComponent<RoomScript>().enemiesList)
                     {
