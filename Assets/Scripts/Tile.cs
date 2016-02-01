@@ -137,5 +137,6 @@ public class Tile : MonoBehaviour {
         BC.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         BC.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         BC.gameObject.layer = 10;
+        BC.gameObject.transform.Translate(new Vector3(0, 0, -.01f));
     }	
 }
