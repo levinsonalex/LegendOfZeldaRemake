@@ -62,6 +62,15 @@ public class BoomerangScript : MonoBehaviour
             Destroy(coll.gameObject);
             PlayerControl.instance.key_count++;
         }
+        else if (coll.gameObject.tag == "Heart")
+        {
+            Destroy(coll.gameObject);
+            PlayerControl.instance.curHealth += 2;
+            if (PlayerControl.instance.curHealth > PlayerControl.instance.maxHealth)
+            {
+                PlayerControl.instance.curHealth = PlayerControl.instance.maxHealth;
+            }
+        }
         else if (coll.gameObject.tag == "Map")
         {
             Destroy(coll.gameObject);

@@ -75,19 +75,21 @@
     <Compile Include="Assets\Scripts\BombScript.cs" />
     <Compile Include="Assets\Scripts\BoomerangScript.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\Extra.cs" />
     <Compile Include="Assets\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\ParseZeldaMap.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />
     <Compile Include="Assets\Scripts\ShowMap.cs" />
     <Compile Include="Assets\Scripts\ShowMapOnCamera.cs" />
+    <Compile Include="Assets\Scripts\SkeletosScript.cs" />
     <Compile Include="Assets\Scripts\StateMachine.cs" />
     <Compile Include="Assets\Scripts\Tile.cs" />
     <Compile Include="Assets\Scripts\Typewriter.cs" />
     <Compile Include="Assets\Scripts\bat.cs" />
+    <Compile Include="Assets\Scripts\bladetrapScript.cs" />
     <Compile Include="Assets\Scripts\enemy.cs" />
     <Compile Include="Assets\Scripts\gel.cs" />
-    <Compile Include="Assets\bladetrapScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Collision.txt" />

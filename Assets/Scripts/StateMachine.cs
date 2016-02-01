@@ -616,6 +616,7 @@ public class StateLinkDamaged : State
 
     public override void OnStart()
     {
+        pc.current_state = EntityState.DAMAGED;
         pc.curHealth -= damage;
         pc.invincibleOn();
         pc.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -654,7 +655,172 @@ public class StateLinkDamaged : State
     }
 }
 
+public class EnemyMoveTile : State
+{
+    PlayerControl pc;
+    EnemyScript enemyObj;
+    Direction dir;
+    float speed;
+    Vector3 startPos;
+    Vector3 unitVector;
+    Vector3 finalPos;
 
+    public EnemyMoveTile(EnemyScript enemyObj, Direction dir, float speed = 2f)
+    {
+        this.enemyObj = enemyObj;
+        this.dir = dir;
+        this.speed = speed;
+        startPos = enemyObj.transform.position;
+    }
+
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.MOVING;
+        switch (dir)
+        {
+            case Direction.EAST:
+                unitVector = new Vector3(1, 0, 0);
+                break;
+            case Direction.NORTH:
+                unitVector = new Vector3(0, 1, 0);
+                break;
+            case Direction.SOUTH:
+                unitVector = new Vector3(0, -1, 0);
+                break;
+            case Direction.WEST:
+                unitVector = new Vector3(-1, 0, 0);
+                break;
+            default:
+                Debug.Log("Incorrect Input Direction");
+                return;
+        }
+        finalPos = startPos + unitVector;
+    }
+    
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        switch (dir)
+        {
+            case Direction.EAST:
+                if(enemyObj.transform.position.x - finalPos.x >= 0)
+                {
+                    enemyObj.transform.position = finalPos;
+                    ConcludeState();
+                }
+                break;
+            case Direction.NORTH:
+                if (enemyObj.transform.position.y - finalPos.y >= 0)
+                {
+                    enemyObj.transform.position = finalPos;
+                    ConcludeState();
+                }
+                break;
+            case Direction.SOUTH:
+                if (enemyObj.transform.position.y - finalPos.y <= 0)
+                {
+                    enemyObj.transform.position = finalPos;
+                    ConcludeState();
+                }
+                break;
+            case Direction.WEST:
+                if (enemyObj.transform.position.x - finalPos.x <= 0)
+                {
+                    enemyObj.transform.position = finalPos;
+                    ConcludeState();
+                }
+                break;
+            default:
+                Debug.Log("Incorrect Input Direction");
+                return;
+        }
+        enemyObj.GetComponent<Rigidbody>().velocity = unitVector * time_delta_fraction * speed;
+    }
+
+    public override void OnFinish()
+    {
+        enemyObj.current_state = EntityState.NORMAL;
+    }
+}
+
+public class StateEnemyDamaged : State
+{
+    EnemyScript enemyObj;
+    GameObject damageSource;
+    int damage;
+    Direction knockbackDir;
+    float cooldown = 15;
+
+    public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource, int damage)
+    {
+        this.enemyObj = enemyObj;
+        this.damageSource = damageSource;
+        this.damage = damage;
+        float xOffset = damageSource.transform.position.x - enemyObj.transform.position.x;
+        float yOffset = damageSource.transform.position.y - enemyObj.transform.position.y;
+        if (Mathf.Abs(xOffset) > Mathf.Abs(yOffset))
+        {
+            if (xOffset < 0)
+            {
+                knockbackDir = Direction.EAST;
+            }
+            else
+            {
+                knockbackDir = Direction.WEST;
+            }
+        }
+        else
+        {
+            if (yOffset < 0)
+            {
+                knockbackDir = Direction.NORTH;
+            }
+            else
+            {
+                knockbackDir = Direction.SOUTH;
+            }
+        }
+    }
+
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.DAMAGED;
+        enemyObj.health -= damage;
+        enemyObj.invincibleOn();
+        enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        cooldown -= time_delta_fraction;
+        if (cooldown <= 0)
+        {
+            ConcludeState();
+        }
+
+        if (knockbackDir == Direction.EAST)
+        {
+            enemyObj.GetComponent<Rigidbody>().velocity = new Vector3(1, 0, 0) * enemyObj.knockback_velocity * time_delta_fraction;
+        }
+        else if (knockbackDir == Direction.WEST)
+        {
+            enemyObj.GetComponent<Rigidbody>().velocity = new Vector3(-1, 0, 0) * enemyObj.knockback_velocity * time_delta_fraction;
+        }
+        else if (knockbackDir == Direction.NORTH)
+        {
+            enemyObj.GetComponent<Rigidbody>().velocity = new Vector3(0, 1, 0) * enemyObj.knockback_velocity * time_delta_fraction;
+        }
+        else // West
+        {
+            enemyObj.GetComponent<Rigidbody>().velocity = new Vector3(0, -1, 0) * enemyObj.knockback_velocity * time_delta_fraction;
+        }
+    }
+
+    public override void OnFinish()
+    {
+        enemyObj.invincibleOff();
+        enemyObj.current_state = EntityState.NORMAL;
+    }
+}
 // Additional recommended states:
 // StateDeath
 // StateDamaged

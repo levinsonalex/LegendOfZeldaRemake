@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 
 public enum Direction {NORTH, EAST, SOUTH, WEST};
-public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING };
+public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING, DAMAGED, MOVING};
 
 public class PlayerControl : MonoBehaviour {
 
@@ -151,39 +151,48 @@ public class PlayerControl : MonoBehaviour {
 	void OnTriggerEnter(Collider coll)
 	{
         if (coll.gameObject.tag == "Rupee")
-		{
-			Destroy(coll.gameObject);
-			rupee_count++;
-		}
-		else if(coll.gameObject.tag == "Key")
-		{
-			Destroy(coll.gameObject);
-			key_count++;
-		}
-        else if(coll.gameObject.tag == "Map")
+        {
+            Destroy(coll.gameObject);
+            rupee_count++;
+        }
+        else if (coll.gameObject.tag == "Key")
+        {
+            Destroy(coll.gameObject);
+            key_count++;
+        }
+        else if(coll.gameObject.tag == "Heart")
+        {
+            Destroy(coll.gameObject);
+            curHealth += 2;
+            if(curHealth > maxHealth)
+            {
+                curHealth = maxHealth;
+            }
+        }
+        else if (coll.gameObject.tag == "Map")
         {
             Destroy(coll.gameObject);
             hasMap = true;
             Hud.instance.Map_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
         }
-        else if(coll.gameObject.tag == "Compass")
+        else if (coll.gameObject.tag == "Compass")
         {
             Destroy(coll.gameObject);
             hasCompass = true;
             Hud.instance.Compass_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
         }
-        else if(coll.gameObject.tag == "Bow")
+        else if (coll.gameObject.tag == "Bow")
         {
-			Destroy(coll.gameObject);
+            Destroy(coll.gameObject);
             hasBow = true;
             Hud.instance.Bow_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
             Hud.instance.cursorLocations.Add(-50);
-			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
-			{
-				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
-				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(-50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
-			}
-		}
+            if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
+            {
+                Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
+                Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(-50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+            }
+        }
         else if (coll.gameObject.tag == "Bomb")
         {
             Destroy(coll.gameObject);
@@ -200,19 +209,33 @@ public class PlayerControl : MonoBehaviour {
                 Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(0, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
             }
         }
-        else if(coll.gameObject.tag == "Boomerang")
+        else if (coll.gameObject.tag == "Boomerang")
         {
-			Destroy(coll.gameObject);
+            Destroy(coll.gameObject);
             hasBoomerang = true;
             Hud.instance.Boomerang_Inv.GetComponent<Image>().color = new Color(255, 255, 255);
             Hud.instance.cursorLocations.Add(50);
-			if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
-			{
-				Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
-				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
-			}
-		}
-		else if(!customMap && coll.gameObject.name == "080x049")
+            if (!Hud.instance.Cursor_Inv.GetComponent<Image>().enabled)
+            {
+                Hud.instance.Cursor_Inv.GetComponent<Image>().enabled = true;
+                Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
+            }
+        }
+        else if (!invincible && coll.gameObject.tag == "Enemy")
+        {
+            int damage = 1;
+            print("HIT ENEMY");
+            if (coll.gameObject.name == "FinalBoss")
+            {
+                damage = 2;
+            }
+            else
+            {
+
+            }
+            control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, damage));
+        }
+        else if(!customMap && coll.gameObject.name == "080x049")
         {
             coll.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         }
@@ -592,12 +615,17 @@ public class PlayerControl : MonoBehaviour {
         #region Enemies
         else if (!invincible && coll.gameObject.tag == "Enemy")
         {
+            int damage = 1;
             print("HIT ENEMY");
-            if(coll.gameObject.name == "FinalBoss")
+            if (coll.gameObject.name == "FinalBoss")
             {
-                print("FinalBoss hit.");
-                control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, 2));
+                damage = 2;
             }
+            else
+            {
+
+            }
+            control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, damage));
         }
         #endregion
         else

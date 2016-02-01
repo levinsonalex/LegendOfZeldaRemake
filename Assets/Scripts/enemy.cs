@@ -140,7 +140,7 @@ public class enemy : MonoBehaviour {
 	
 	void switchDirections(Direction oldDir){
 		while (curDirection == oldDir) {
-			curDirection = (Direction)Random.Range (0, 3);
+			curDirection = (Direction)Random.Range (0, 4);
 		}
 	}
 
