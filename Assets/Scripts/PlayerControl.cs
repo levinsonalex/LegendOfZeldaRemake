@@ -8,6 +8,9 @@ public enum EntityState {NORMAL, ATTACKING, PUSHING, TRANSITIONING };
 
 public class PlayerControl : MonoBehaviour {
 
+    public static bool customMap = false;
+    public bool customMapToggle = false;
+
 	public Sprite[] link_run_down;
 	public Sprite[] link_run_up;
 	public Sprite[] link_run_right;
@@ -68,6 +71,7 @@ public class PlayerControl : MonoBehaviour {
 	void Awake()
 	{
 		mapSprites = Resources.LoadAll<Sprite>("map_sprites");
+        customMap = customMapToggle;
 	}
 
 	// Use this for initialization
@@ -208,7 +212,7 @@ public class PlayerControl : MonoBehaviour {
 				Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
 			}
 		}
-		else if(coll.gameObject.name == "080x049")
+		else if(!customMap && coll.gameObject.name == "080x049")
         {
             coll.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         }
@@ -281,7 +285,7 @@ public class PlayerControl : MonoBehaviour {
 				coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 				key_count--;
 
-				if (roomX == 0 && roomY == 3)
+				if (!customMap && roomX == 0 && roomY == 3)
 				{
 					doorUnlocked0x3 = true;
 				}
@@ -296,7 +300,7 @@ public class PlayerControl : MonoBehaviour {
 				coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 				key_count--;
 
-                if (roomX == 0 && roomY == 5)
+                if (!customMap && roomX == 0 && roomY == 5)
                 {
                     doorUnlocked0x5 = true;
                 }
@@ -322,19 +326,19 @@ public class PlayerControl : MonoBehaviour {
 					coll.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 					firstTouch.GetComponent<BoxCollider>().isTrigger = true;
 
-					if(roomX == 0 && roomY == 0)
+					if(!customMap && roomX == 0 && roomY == 0)
 					{
 						doorUnlocked0x0 = true;
 					}
-					else if(roomX == -1 && roomY == 2)
+					else if(!customMap && roomX == -1 && roomY == 2)
 					{
 						doorUnlocked_1x2 = true;
 					}
-                    else if(roomX == 0 && roomY == 4)
+                    else if(!customMap && roomX == 0 && roomY == 4)
                     {
                         doorUnlocked0x4 = true;
                     }
-                    else if(roomX == 2 && roomY == 3)
+                    else if(!customMap && roomX == 2 && roomY == 3)
                     {
                         doorUnlocked2x3 = true;
                     }
@@ -354,7 +358,9 @@ public class PlayerControl : MonoBehaviour {
 		//Pushable Blocks
 		else if (coll.gameObject.CompareTag("Pushable"))
 		{
-			if (coll.gameObject.name == "023x038" && coll.gameObject.transform.position.x > 22)
+            print("Pushable: " + coll.gameObject.name);
+            #region RegularDungeon
+            if (!customMap && coll.gameObject.name == "023x038" && coll.gameObject.transform.position.x > 22)
 			{
 				if(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
 					Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
@@ -362,7 +368,7 @@ public class PlayerControl : MonoBehaviour {
 					control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("017x038").gameObject));
 				}
 			}
-			if(coll.gameObject.name == "022x060" && Mathf.Abs(coll.gameObject.transform.position.y - 60) < 1)
+			if(!customMap && coll.gameObject.name == "022x060" && Mathf.Abs(coll.gameObject.transform.position.y - 60) < 1)
 			{
 				if (Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
 				{
@@ -372,13 +378,120 @@ public class PlayerControl : MonoBehaviour {
 					}
 				}
 			}
-		}
-        else if(coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")
+            #endregion RegularDungeon
+            #region CustomDungeon
+            if (customMap && coll.gameObject.name == "025x005" && coll.gameObject.transform.position.x < 26) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "022x005" && coll.gameObject.transform.position.x > 21) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "038x024" && coll.gameObject.transform.position.x < 39) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "043x024" && coll.gameObject.transform.position.x < 44) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "036x030" && coll.gameObject.transform.position.x > 35) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "041x030" && coll.gameObject.transform.position.x > 40) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "056x027" && coll.gameObject.transform.position.x > 55) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject, GameObject.Find("049x027")));
+                }
+            }
+            if (customMap && coll.gameObject.name == "021x036" && coll.gameObject.transform.position.x > 20) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "025x036" && coll.gameObject.transform.position.x > 24) // Left
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "026x040" && coll.gameObject.transform.position.x < 27) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "021x040" && coll.gameObject.transform.position.x < 22) // Right
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "019x038" && coll.gameObject.transform.position.y < 39) // Up
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y > 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            if (customMap && coll.gameObject.name == "028x038" && coll.gameObject.transform.position.y > 37) // Down
+            {
+                if (coll.gameObject.GetComponent<Transform>().position.y - GetComponent<Transform>().position.y < 0 &&
+                    Mathf.Abs(coll.gameObject.GetComponent<Transform>().position.x - GetComponent<Transform>().position.x) < .25)
+                {
+                    control_state_machine.ChangeState(new StateLinkPush(this, coll.gameObject));
+                }
+            }
+            #endregion CustomDungeon
+        }
+        else if(!customMap && coll.gameObject.GetComponent<SpriteRenderer>().sprite.name == "spriteMap_105")
         {
             transform.position = new Vector3(96f, 8.5f, 0);
             GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(100.4f, 6.4f, -10);
         }
-        else if(coll.gameObject.name == "2DRoomExit")
+        else if(!customMap && coll.gameObject.name == "2DRoomExit")
         {
             transform.position = new Vector3(22f, 59f, 0);
             GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(23.5f, 61.4f, -10);
@@ -394,92 +507,99 @@ public class PlayerControl : MonoBehaviour {
 
 	public void roomHandle(int x, int y)
 	{
-		if (doorUnlocked0x0)
-		{
-			GameObject leftUpDoor = GameObject.Find("039x009");
-			GameObject rightUpDoor = GameObject.Find("040x009");
-			if (leftUpDoor != null && rightUpDoor != null)
-			{
-				leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
-				rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
-
-				leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-				rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-			}
-		}
-
-		if (doorUnlocked_1x2)
-		{
-			GameObject leftUpDoor = GameObject.Find("023x031");
-			GameObject rightUpDoor = GameObject.Find("024x031");
-			if (leftUpDoor != null && rightUpDoor != null)
-			{
-				leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
-				rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
-
-				leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-				rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-			}
-		}
-
-		if (doorUnlocked0x3)
-		{
-			GameObject door = GameObject.Find("046x038");
-			if (door != null)
-			{
-				door.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
-				door.GetComponent<BoxCollider>().isTrigger = true;
-			}
-		}
-
-        if (doorUnlocked0x4)
+        if (!customMap)
         {
-            GameObject leftUpDoor = GameObject.Find("039x053");
-            GameObject rightUpDoor = GameObject.Find("040x053");
-            if (leftUpDoor != null && rightUpDoor != null)
+            if (doorUnlocked0x0)
             {
-                leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
-                rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+                GameObject leftUpDoor = GameObject.Find("039x009");
+                GameObject rightUpDoor = GameObject.Find("040x009");
+                if (leftUpDoor != null && rightUpDoor != null)
+                {
+                    leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+                    rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
 
-                leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-                rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                    leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                    rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+            if (doorUnlocked_1x2)
+            {
+                GameObject leftUpDoor = GameObject.Find("023x031");
+                GameObject rightUpDoor = GameObject.Find("024x031");
+                if (leftUpDoor != null && rightUpDoor != null)
+                {
+                    leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+                    rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+
+                    leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                    rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+            if (doorUnlocked0x3)
+            {
+                GameObject door = GameObject.Find("046x038");
+                if (door != null)
+                {
+                    door.GetComponent<SpriteRenderer>().sprite = mapSprites[48];
+                    door.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+            if (doorUnlocked0x4)
+            {
+                GameObject leftUpDoor = GameObject.Find("039x053");
+                GameObject rightUpDoor = GameObject.Find("040x053");
+                if (leftUpDoor != null && rightUpDoor != null)
+                {
+                    leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+                    rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+
+                    leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                    rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+            if (doorUnlocked0x5)
+            {
+                GameObject door = GameObject.Find("033x060");
+                if (door != null)
+                {
+                    door.GetComponent<SpriteRenderer>().sprite = mapSprites[51];
+                    door.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+            if (doorUnlocked2x3)
+            {
+                GameObject leftUpDoor = GameObject.Find("071x042");
+                GameObject rightUpDoor = GameObject.Find("072x042");
+                if (leftUpDoor != null && rightUpDoor != null)
+                {
+                    leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
+                    rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
+
+                    leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                    rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
+                }
+            }
+
+
+
+            if (x == -1 && y == 3)
+            {
+                eastMostTypewriterOnSwitch = false;
+            }
+            else if (x == -2 && y == 3)
+            {
+                eastMostTypewriterOnSwitch = true;
             }
         }
-
-        if (doorUnlocked0x5)
+        else
         {
-            GameObject door = GameObject.Find("033x060");
-            if (door != null)
-            {
-                door.GetComponent<SpriteRenderer>().sprite = mapSprites[51];
-                door.GetComponent<BoxCollider>().isTrigger = true;
-            }
+
         }
-
-        if (doorUnlocked2x3)
-        {
-            GameObject leftUpDoor = GameObject.Find("071x042");
-            GameObject rightUpDoor = GameObject.Find("072x042");
-            if (leftUpDoor != null && rightUpDoor != null)
-            {
-                leftUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[92];
-                rightUpDoor.GetComponent<SpriteRenderer>().sprite = mapSprites[93];
-
-                leftUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-                rightUpDoor.GetComponent<BoxCollider>().isTrigger = true;
-            }
-        }
-
-
-        
-        if (x == -1 && y == 3)
-		{
-			eastMostTypewriterOnSwitch = false;
-		}
-		else if (x == -2 && y == 3)
-		{
-			eastMostTypewriterOnSwitch = true;
-		}
 	}
 
     public void catchBoomerang()

@@ -510,6 +510,7 @@ public class StateLinkPush : State
 			posFreeze = RigidbodyConstraints.FreezePositionY;
 		}
 		pushBlock.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | posFreeze;
+        pushBlock.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 	}
 
 	public override void OnUpdate(float time_delta_fraction)
@@ -551,7 +552,8 @@ public class StateLinkPush : State
 			doorBlock.gameObject.GetComponent<SpriteRenderer>().sprite = pc.mapSprites[51];
 			doorBlock.gameObject.GetComponent<BoxCollider>().isTrigger = true;
 		}
-		pc.current_state = EntityState.NORMAL;
+        pushBlock.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+        pc.current_state = EntityState.NORMAL;
 	}
 
 	private bool isOver()
