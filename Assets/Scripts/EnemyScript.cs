@@ -20,7 +20,6 @@ public class EnemyScript : MonoBehaviour {
     // Use this for initialization
     public virtual void Start () {
         control_state_machine = new StateMachine();
-        control_state_machine.ChangeState(new EnemyMoveTile(this, (Direction)Random.Range(0, 4), move_velocity));
     }
 	
 	// Update is called once per frame
@@ -91,6 +90,10 @@ public class EnemyScript : MonoBehaviour {
                         Debug.Log("Weird stuff is happening.");
                         break;
                 }
+            }
+            if(transform.childCount > 0)
+            {
+                transform.GetChild(0).transform.SetParent(null);
             }
             GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
             Destroy(gameObject);

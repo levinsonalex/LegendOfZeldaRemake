@@ -400,6 +400,7 @@ public class StateLinkTransition : State
 	public override void OnStart()
 	{
 		pc.current_state = EntityState.TRANSITIONING;
+        pc.roomExit(pc.roomX, pc.roomY);
 		pc.GetComponent<SpriteRenderer>().sortingOrder = -1;
 
 		if (dir == Direction.EAST)
