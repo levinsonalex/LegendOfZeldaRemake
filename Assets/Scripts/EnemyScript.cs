@@ -92,6 +92,7 @@ public class EnemyScript : MonoBehaviour {
                         break;
                 }
             }
+            GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
             Destroy(gameObject);
         }
     }
