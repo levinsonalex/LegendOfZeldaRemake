@@ -76,9 +76,11 @@
     <Compile Include="Assets\Scripts\BombScript.cs" />
     <Compile Include="Assets\Scripts\BoomerangScript.cs" />
     <Compile Include="Assets\Scripts\CameraFollow.cs" />
+    <Compile Include="Assets\Scripts\EnemyBoomerangScript.cs" />
     <Compile Include="Assets\Scripts\EnemyScript.cs" />
     <Compile Include="Assets\Scripts\Extra.cs" />
     <Compile Include="Assets\Scripts\GelScript.cs" />
+    <Compile Include="Assets\Scripts\GoriyaScript.cs" />
     <Compile Include="Assets\Scripts\Hud.cs" />
     <Compile Include="Assets\Scripts\ParseZeldaMap.cs" />
     <Compile Include="Assets\Scripts\PlayerControl.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Assets\Scripts\bladetrapScript.cs" />
     <Compile Include="Assets\Scripts\enemy.cs" />
     <Compile Include="Assets\Scripts\gel.cs" />
+    <Compile Include="Assets\Scripts\goriyaAnimatorScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\Collision.txt" />

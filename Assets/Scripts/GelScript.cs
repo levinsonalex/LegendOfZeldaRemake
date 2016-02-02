@@ -16,8 +16,13 @@ public class GelScript : EnemyScript {
             }
             else
             {
-                control_state_machine.ChangeState(new EnemyMoveTile(this, (Direction)Random.Range(0, 4), move_velocity));
+                control_state_machine.ChangeState(new EnemyMoveTile(this, getRandomDirection(), move_velocity));
             }
         }
+    }
+
+    override public void BoomerangHit()
+    {
+        Damage(1, PlayerControl.instance.gameObject);
     }
 }

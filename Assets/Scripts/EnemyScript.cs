@@ -8,10 +8,15 @@ public class EnemyScript : MonoBehaviour {
     public GameObject heart;
     public GameObject bomb;
 
+    public GameObject enemy_boomerang;
+
     public EntityState current_state = EntityState.NORMAL;
+    public Direction current_direction;
     public float move_velocity = 1f;
     public float knockback_velocity = 10f;
     public StateMachine control_state_machine;
+
+    public bool attacking = false;
 
     public bool invincible = false;
  
@@ -28,7 +33,7 @@ public class EnemyScript : MonoBehaviour {
 
         if (control_state_machine.IsFinished())
         {
-            control_state_machine.ChangeState(new EnemyMoveTile(this, (Direction)Random.Range(0, 4), move_velocity));
+            control_state_machine.ChangeState(new EnemyMoveTile(this, getRandomDirection(), move_velocity));
         }
     }
 
@@ -44,30 +49,39 @@ public class EnemyScript : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Beam")
         {
-            Damage(1, PlayerControl.instance.gameObject);
+            Damage(1, PlayerControl.instance.gameObject, false);
         }
         else if (coll.gameObject.tag == "Boomerang")
         {
-
+            BoomerangHit();
         }
         else
         {
             GetComponent<Rigidbody>().velocity = Vector3.zero;
             transform.position = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), 0);
-            Direction moveDir = (Direction)Random.Range(0, 4);
-            control_state_machine.ChangeState(new EnemyMoveTile(this, moveDir, move_velocity));
+            control_state_machine.ChangeState(new EnemyMoveTile(this, getRandomDirection(), move_velocity));
         }
     }
 
     public virtual void OnCollisionStay(Collision coll)
     {
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        transform.position = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), 0);
-        Direction moveDir = (Direction)Random.Range(0, 4);
-        control_state_machine.ChangeState(new EnemyMoveTile(this, moveDir, move_velocity));
+        if (coll.gameObject.tag == "Beam")
+        {
+            Damage(1, PlayerControl.instance.gameObject, false);
+        }
+        else if (coll.gameObject.tag == "Boomerang")
+        {
+            BoomerangHit();
+        }
+        else
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            transform.position = new Vector3(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), 0);
+            control_state_machine.ChangeState(new EnemyMoveTile(this, getRandomDirection(), move_velocity));
+        }
     }
 
-    public virtual void Damage(int dmg, GameObject damageFrom)
+    public virtual void Damage(int dmg, GameObject damageFrom, bool knockBack = true)
     {
         if (invincible)
         {
@@ -102,18 +116,30 @@ public class EnemyScript : MonoBehaviour {
             GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
             Destroy(gameObject);
         }
-        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom));
+        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom, knockBack));
     }
 
-    public void invincibleOn()
+    public virtual void BoomerangHit()
+    {
+        control_state_machine.ChangeState(new StateEnemyStunned(this, 200));
+    }
+
+    public void InvincibleOn()
     {
         GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
         invincible = true;
     }
 
-    public void invincibleOff()
+    public void InvincibleOff()
     {
         GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
         invincible = false;
+    }
+
+    public virtual Direction getRandomDirection()
+    {
+        Direction moveDir = (Direction) Random.Range(0, 4);
+        current_direction = moveDir;
+        return moveDir;
     }
 }

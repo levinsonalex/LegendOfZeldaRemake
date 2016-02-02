@@ -222,7 +222,7 @@ public class PlayerControl : MonoBehaviour {
                 Hud.instance.Cursor_Inv.transform.localPosition = new Vector3(50, Hud.instance.Cursor_Inv.transform.localPosition.y, Hud.instance.Cursor_Inv.transform.localPosition.z);
             }
         }
-        else if (!invincible && coll.gameObject.tag == "Enemy")
+        else if (!invincible && (coll.gameObject.tag == "Enemy" || coll.gameObject.tag == "EnemyWeapon"))
         {
             int damage = 1;
             print("HIT ENEMY");
@@ -614,7 +614,7 @@ public class PlayerControl : MonoBehaviour {
         }
         #endregion
         #region Enemies
-        else if (!invincible && coll.gameObject.tag == "Enemy")
+        else if (!invincible && (coll.gameObject.tag == "Enemy" || coll.gameObject.tag == "EnemyWeapon"))
         {
             int damage = 1;
             print("HIT ENEMY");

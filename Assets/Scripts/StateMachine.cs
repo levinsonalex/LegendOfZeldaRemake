@@ -749,11 +749,13 @@ public class StateEnemyDamaged : State
     GameObject damageSource;
     Direction knockbackDir;
     float cooldown = 15;
+    bool knockBack;
 
-    public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource)
+    public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource, bool knockBack)
     {
         this.enemyObj = enemyObj;
         this.damageSource = damageSource;
+        this.knockBack = knockBack;
         float xOffset = damageSource.transform.position.x - enemyObj.transform.position.x;
         float yOffset = damageSource.transform.position.y - enemyObj.transform.position.y;
         if (Mathf.Abs(xOffset) > Mathf.Abs(yOffset))
@@ -783,7 +785,7 @@ public class StateEnemyDamaged : State
     public override void OnStart()
     {
         enemyObj.current_state = EntityState.DAMAGED;
-        enemyObj.invincibleOn();
+        enemyObj.InvincibleOn();
         enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 
@@ -793,6 +795,10 @@ public class StateEnemyDamaged : State
         if (cooldown <= 0)
         {
             ConcludeState();
+        }
+        if (!knockBack)
+        {
+            return;
         }
 
         if (knockbackDir == Direction.EAST)
@@ -815,7 +821,7 @@ public class StateEnemyDamaged : State
 
     public override void OnFinish()
     {
-        enemyObj.invincibleOff();
+        enemyObj.InvincibleOff();
         enemyObj.current_state = EntityState.NORMAL;
     }
 }
@@ -823,11 +829,12 @@ public class StateEnemyDamaged : State
 public class StateEnemyStunned : State
 {
     EnemyScript enemyObj;
-    float cooldown = 15;
+    float cooldown;
 
-    public StateEnemyStunned(EnemyScript enemyObj)
+    public StateEnemyStunned(EnemyScript enemyObj, int cooldown = 15)
     {
         this.enemyObj = enemyObj;
+        this.cooldown = cooldown;
     }
 
     public override void OnStart()
@@ -840,6 +847,72 @@ public class StateEnemyStunned : State
     {
         cooldown -= time_delta_fraction;
         if (cooldown <= 0)
+        {
+            ConcludeState();
+        }
+    }
+
+    public override void OnFinish()
+    {
+        enemyObj.current_state = EntityState.NORMAL;
+    }
+}
+
+public class StateEnemyThrowBoomerang : State
+{
+    EnemyScript enemyObj;
+    float cooldown;
+
+    public StateEnemyThrowBoomerang(EnemyScript enemyObj)
+    {
+        this.enemyObj = enemyObj;
+    }
+
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.ATTACKING;
+        enemyObj.attacking = true;
+        enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+
+        Vector3 direction_offset = Vector3.zero;
+        Vector3 direction_eulerAngle = Vector3.zero;
+
+        if (enemyObj.current_direction == Direction.NORTH)
+        {
+            direction_offset = new Vector3(0, 1, 0);
+            direction_eulerAngle = new Vector3(0, 0, 90);
+        }
+        else if (enemyObj.current_direction == Direction.EAST)
+        {
+            direction_offset = new Vector3(1, 0, 0);
+            direction_eulerAngle = new Vector3(0, 0, 0);
+        }
+        else if (enemyObj.current_direction == Direction.SOUTH)
+        {
+            direction_offset = new Vector3(0, -1, 0);
+            direction_eulerAngle = new Vector3(0, 0, 270);
+        }
+        else if (enemyObj.current_direction == Direction.WEST)
+        {
+            direction_offset = new Vector3(-1, 0, 0);
+            direction_eulerAngle = new Vector3(0, 0, 180);
+        }
+
+        Quaternion new_weapon_rotation = new Quaternion();
+        new_weapon_rotation.eulerAngles = direction_eulerAngle;
+
+        GameObject boomerang = Object.Instantiate(enemyObj.enemy_boomerang, enemyObj.transform.position, Quaternion.identity) as GameObject;
+        boomerang.transform.position += direction_offset;
+        boomerang.transform.rotation = new_weapon_rotation;
+        boomerang.GetComponent<EnemyBoomerangScript>().thrower = (GoriyaScript) enemyObj;
+
+        boomerang.GetComponent<Rigidbody>().velocity = direction_offset * PlayerControl.instance.boomerang_velocity;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        if (!enemyObj.attacking)
         {
             ConcludeState();
         }

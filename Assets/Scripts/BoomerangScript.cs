@@ -21,7 +21,6 @@ public class BoomerangScript : MonoBehaviour
     {
         if (!turnAround && Vector3.Distance(initialLocation, transform.position) > 4)
         {
-            Debug.Log("YO TURN AROUND BOY.");
             turnAround = true;
             GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
