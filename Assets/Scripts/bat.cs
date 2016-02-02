@@ -42,7 +42,7 @@ public class bat : MonoBehaviour
     public float endWaitTime = 5.0f;
     public float startWaitTime;
     public float startFlightTime;
-    public float endFlightTime = 10.0f;
+    public float endFlightTime;
     public batState curState;
 
 
@@ -144,6 +144,7 @@ public class bat : MonoBehaviour
                     curState = batState.flying;
                     curSpeed = maxSpeed;
                     startFlightTime = Time.time;
+                    endFlightTime = Random.Range(3, 15);
                 }
             }
             else if (curState == batState.flying)
@@ -236,25 +237,6 @@ public class bat : MonoBehaviour
 
     public virtual void Damage(int dmg, GameObject damageFrom)
     {
-        //if (Random.Range(0, 5) == 0)
-        //    {
-        //    int itemDrop = Random.Range(0, 3);
-        //    switch (itemDrop)
-        //    {
-        //        case 0:
-        //            Instantiate(rupee, transform.position, Quaternion.identity);
-        //            break;
-        //        case 1:
-        //            Instantiate(heart, transform.position, Quaternion.identity);
-        //            break;
-        //        case 2:
-        //            Instantiate(bomb, transform.position, Quaternion.identity);
-        //            break;
-        //        default:
-        //            Debug.Log("Weird stuff is happening.");
-        //            break;
-        //    }
-        //}
         GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
         Destroy(gameObject);
     }
