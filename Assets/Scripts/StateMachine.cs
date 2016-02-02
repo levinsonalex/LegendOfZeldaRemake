@@ -918,15 +918,164 @@ public class StateEnemyThrowBoomerang : State
         enemyObj.current_state = EntityState.NORMAL;
     }
 }
-// Additional recommended states:
-// StateDeath
-// StateDamaged
-// StateWeaponSwing
-// StateVictory
 
-// Additional control states:
-// LinkStunnedState.
+public class StateWallmasterTeleport : State {
+    PlayerControl pc;
+    WallmasterScript enemyObj;
+    Direction dir;
+    Vector3 finalPos;
+    Hand handType;
 
+    public StateWallmasterTeleport(WallmasterScript enemyObj, PlayerControl pc, Direction dir, Hand handType)
+    {
+        this.enemyObj = enemyObj;
+        this.pc = pc;
+        this.dir = dir;
+        this.handType = handType;
+        if(handType == Hand.LEFT)
+        {
+            finalPos = new Vector3(-3, -1, 0);
+        }
+        else
+        {
+            finalPos = new Vector3(3, -1, 0);
+        }
+    }
 
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.TRANSITIONING;
+        enemyObj.transform.position = pc.transform.position;
+        enemyObj.current_direction = dir;
+        Vector3 EulerRotation;
+        switch (dir)
+        {
+            case Direction.EAST:
+                EulerRotation = new Vector3(0, 0, 90);
+                break;
+            case Direction.NORTH:
+                EulerRotation = new Vector3(0, 0, 180);
+                break;
+            case Direction.SOUTH:
+                EulerRotation = new Vector3(0, 0, 0);
+                break;
+            case Direction.WEST:
+                EulerRotation = new Vector3(0, 0, -90);
+                break;
+            default:
+                Debug.Log("Incorrect Input Direction");
+                return;
+        }
+        Quaternion rot = new Quaternion();
+        rot.eulerAngles = EulerRotation;
 
+        enemyObj.transform.rotation = rot;
+        enemyObj.transform.GetChild(0).localPosition = finalPos;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        enemyObj.current_state = EntityState.NORMAL;
+        state_machine.ChangeState(new StateWallmasterMovement(enemyObj, pc, handType));
+    }
+
+    public override void OnFinish()
+    {
+
+    }
+}
+
+public class StateWallmasterMovement : State
+{
+    WallmasterScript enemyObj;
+    PlayerControl pc;
+    Hand handType;
+
+    Vector3 chkpt0;
+    Vector3 chkpt1;
+    Vector3 chkpt2 = Vector3.zero;
+    Vector3 chkpt3 = Vector3.down;
+
+    bool chkpt1Hit = false;
+    bool chkpt2Hit = false;
+
+    public StateWallmasterMovement (WallmasterScript enemyObj, PlayerControl pc, Hand handType)
+    {
+        this.enemyObj = enemyObj;
+        this.pc = pc;
+        this.handType = handType;
+        chkpt0 = enemyObj.transform.GetChild(0).localPosition;
+    }
+
+    public override void OnStart()
+    {
+        enemyObj.current_state = EntityState.MOVING;
+        enemyObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = true;
+        if (handType == Hand.LEFT)
+        {
+            chkpt1 = new Vector3(3, 0, 0);
+        }
+        else // RIGHT
+        {
+            chkpt1 = new Vector3(-3, 0, 0);
+        }
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        if (!chkpt1Hit)
+        {
+            if(enemyObj.transform.GetChild(0).transform.localPosition.y >= 0)
+            {
+                enemyObj.transform.GetChild(0).transform.localPosition = -chkpt1;
+                chkpt1Hit = true;
+            }
+            enemyObj.transform.GetChild(0).transform.localPosition += Vector3.up * .01f * enemyObj.move_velocity;
+        }
+        else if (!chkpt2Hit)
+        {
+            if (Mathf.Abs(enemyObj.transform.GetChild(0).transform.localPosition.x - chkpt2.x) <= .25f)
+            {
+                enemyObj.transform.GetChild(0).transform.localPosition = chkpt2;
+                chkpt2Hit = true;
+            }
+            enemyObj.transform.GetChild(0).transform.localPosition += chkpt1.normalized * .01f * enemyObj.move_velocity;
+        }
+        else
+        {
+            if (Mathf.Abs(enemyObj.transform.GetChild(0).transform.localPosition.y - chkpt3.y) <= .25f)
+            {
+                ConcludeState();
+            }
+            enemyObj.transform.GetChild(0).transform.localPosition += Vector3.down * .01f * enemyObj.move_velocity;
+        }
+    }
+
+    public override void OnFinish()
+    {
+        enemyObj.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = false;
+        enemyObj.current_state = EntityState.NORMAL;
+        enemyObj.transform.GetChild(0).GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+}
+
+public class StateIdle : State
+{
+    public StateIdle(){}
+
+    public override void OnStart()
+    {
+        return;
+    }
+
+    public override void OnUpdate(float time_delta_fraction)
+    {
+        ConcludeState();
+    }
+
+    public override void OnFinish()
+    {
+        return;
+    }
+}
 

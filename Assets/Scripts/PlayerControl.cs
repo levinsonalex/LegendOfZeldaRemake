@@ -234,6 +234,15 @@ public class PlayerControl : MonoBehaviour {
             {
                 damage = 2;
             }
+            else if(coll.gameObject.name == "wallmaster_right_prefab" || coll.gameObject.name == "wallmaster_left_prefab")
+            {
+                GameObject.FindGameObjectWithTag("MainCamera").transform.position = new Vector3(39.5f, 6.5f, -10f);
+                transform.position = new Vector3(39.5f, 2f, 0);
+                roomExit(roomX, roomY);
+                roomX = 0;
+                roomY = 0;
+                roomHandle(roomX, roomY);
+            }
             else
             {
 
@@ -633,25 +642,75 @@ public class PlayerControl : MonoBehaviour {
             control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, damage));
         }
         #endregion
-        else if (roomX == 3 && roomY == 2) { 
-            if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y >= 1.5)
+        else if (roomX == 2 && roomY == 3) {
+            GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", roomX, roomY));
+            if (GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y <= -1.5)
             {
-                print("Up");
+                if (roomObject.GetComponent<RoomScript>().enemiesList.Count > 0)
+                {
+                    foreach(GameObject wallmaster in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        if(wallmaster.GetComponent<WallmasterScript>().current_state == EntityState.NORMAL)
+                        {
+                            wallmaster.GetComponent<WallmasterScript>().control_state_machine.ChangeState(
+                                new StateWallmasterTeleport(wallmaster.GetComponent<WallmasterScript>(), 
+                                                            instance, 
+                                                            Direction.NORTH, 
+                                                            wallmaster.GetComponent<WallmasterScript>().handType));
+                        }
+                    }
+                }
             }
-            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y <= -4)
+            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y >= 4)
             {
-                print("DOWN");
-
-            }
-            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.x - transform.position.x >= 5)
-            {
-                print("RIGHT");
-
+                if (roomObject.GetComponent<RoomScript>().enemiesList.Count > 0)
+                {
+                    foreach (GameObject wallmaster in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        if (wallmaster.GetComponent<WallmasterScript>().current_state == EntityState.NORMAL)
+                        {
+                            wallmaster.GetComponent<WallmasterScript>().control_state_machine.ChangeState(
+                                new StateWallmasterTeleport(wallmaster.GetComponent<WallmasterScript>(),
+                                                            instance,
+                                                            Direction.SOUTH,
+                                                            wallmaster.GetComponent<WallmasterScript>().handType));
+                        }
+                    }
+                }
             }
             else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.x - transform.position.x <= -5)
             {
-                print("LEFT");
-
+                if (roomObject.GetComponent<RoomScript>().enemiesList.Count > 0)
+                {
+                    foreach (GameObject wallmaster in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        if (wallmaster.GetComponent<WallmasterScript>().current_state == EntityState.NORMAL)
+                        {
+                            wallmaster.GetComponent<WallmasterScript>().control_state_machine.ChangeState(
+                                new StateWallmasterTeleport(wallmaster.GetComponent<WallmasterScript>(),
+                                                            instance,
+                                                            Direction.EAST,
+                                                            wallmaster.GetComponent<WallmasterScript>().handType));
+                        }
+                    }
+                }
+            }
+            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.x - transform.position.x >= 5)
+            {
+                if (roomObject.GetComponent<RoomScript>().enemiesList.Count > 0)
+                {
+                    foreach (GameObject wallmaster in roomObject.GetComponent<RoomScript>().enemiesList)
+                    {
+                        if (wallmaster.GetComponent<WallmasterScript>().current_state == EntityState.NORMAL)
+                        {
+                            wallmaster.GetComponent<WallmasterScript>().control_state_machine.ChangeState(
+                                new StateWallmasterTeleport(wallmaster.GetComponent<WallmasterScript>(),
+                                                            instance,
+                                                            Direction.WEST,
+                                                            wallmaster.GetComponent<WallmasterScript>().handType));
+                        }
+                    }
+                }
             }
         }
         else
@@ -678,7 +737,8 @@ public class PlayerControl : MonoBehaviour {
                 x ==  0 && y == 4 ||
                 x ==  0 && y == 5 ||
                 x ==  1 && y == 3 ||
-			    x == -1 && y == 5)
+			    x == -1 && y == 5 ||
+                x == 2 && y == 3)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if (roomObject)
@@ -707,7 +767,8 @@ public class PlayerControl : MonoBehaviour {
                 x ==  0 && y == 4 ||
                 x ==  0 && y == 5 ||
                 x ==  1 && y == 3 ||
-			    x == -1 && y == 5)
+			    x == -1 && y == 5 ||
+                x ==  2 && y == 3)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if(roomObject)
@@ -840,13 +901,13 @@ public class PlayerControl : MonoBehaviour {
 
     public void invincibleOn()
     {
-        GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+        GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
         invincible = true;
     }
 
     public void invincibleOff()
     {
-        GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
         invincible = false;
     }
 }

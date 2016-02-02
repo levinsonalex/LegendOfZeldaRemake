@@ -116,7 +116,7 @@ public class EnemyScript : MonoBehaviour {
             GetComponentInParent<RoomScript>().enemiesList.Remove(gameObject);
             Destroy(gameObject);
         }
-        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom, knockBack));
+        control_state_machine.ChangeState(new StateEnemyDamaged(this, damageFrom, false));
     }
 
     public virtual void BoomerangHit()
@@ -126,13 +126,13 @@ public class EnemyScript : MonoBehaviour {
 
     public void InvincibleOn()
     {
-        GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+        GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
         invincible = true;
     }
 
     public void InvincibleOff()
     {
-        GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
         invincible = false;
     }
 
