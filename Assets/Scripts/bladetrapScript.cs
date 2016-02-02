@@ -6,6 +6,10 @@ public class bladetrapScript : MonoBehaviour {
 	
 	Rigidbody myRig;
 	
+
+	public float maxDistanceX;
+	public float maxDistanceY;
+
 	public int speedForward = 6;
 	public int speedBack = 3;
 	
@@ -27,13 +31,19 @@ public class bladetrapScript : MonoBehaviour {
 			Vector3 returnVec = startPosition - transform.position;
 			returnVec.Normalize ();
 			myRig.velocity = returnVec * speedBack;
-			//			Vector3.Distance(
+
 			if(Vector3.Distance(startPosition,transform.position) < .5){
 				transform.position = startPosition;
 				goHome = false;
 				myRig.velocity = Vector3.zero;
 			}
 		} else {
+			if(Mathf.Abs(startPosition.x - transform.position.x) > maxDistanceX || 
+			   Mathf.Abs(startPosition.y - transform.position.y) > maxDistanceY)
+			{
+				goHome = true;
+				return;
+			}
 			if (Mathf.Abs (PlayerControl.instance.transform.position.x - startPosition.x) < 1) {
 				if (PlayerControl.instance.transform.position.y > startPosition.y) {
 					myRig.velocity = speedForward * Vector3.up;

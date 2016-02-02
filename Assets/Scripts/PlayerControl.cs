@@ -677,7 +677,8 @@ public class PlayerControl : MonoBehaviour {
                 x ==  0 && y == 3 ||
                 x ==  0 && y == 4 ||
                 x ==  0 && y == 5 ||
-                x ==  1 && y == 3)
+                x ==  1 && y == 3 ||
+			    x == -1 && y == 5)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if (roomObject)
@@ -705,7 +706,8 @@ public class PlayerControl : MonoBehaviour {
                 x ==  0 && y == 3 ||
                 x ==  0 && y == 4 ||
                 x ==  0 && y == 5 ||
-                x ==  1 && y == 3)
+                x ==  1 && y == 3 ||
+			    x == -1 && y == 5)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if(roomObject)
