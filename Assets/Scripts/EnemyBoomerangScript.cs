@@ -6,7 +6,6 @@ public class EnemyBoomerangScript : MonoBehaviour
 {
     public Vector3 initialLocation;
     public GoriyaScript thrower;
-    private bool bombGrab = false;
     public bool turnAround = false;
 
     // Use this for initialization
@@ -18,7 +17,11 @@ public class EnemyBoomerangScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!turnAround && Vector3.Distance(initialLocation, transform.position) > 4)
+        if(thrower == null)
+        {
+            Destroy(gameObject);
+        }
+        else if (!turnAround && Vector3.Distance(initialLocation, transform.position) > 4)
         {
             turnAround = true;
             GetComponent<Rigidbody>().velocity = Vector3.zero;

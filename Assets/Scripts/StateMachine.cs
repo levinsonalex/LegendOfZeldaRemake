@@ -579,7 +579,6 @@ public class StateLinkPush : State
 public class StateLinkDamaged : State
 {
     PlayerControl pc;
-    GameObject damageSource;
     int damage;
     Direction knockbackDir;
     float cooldown = 15;
@@ -587,7 +586,6 @@ public class StateLinkDamaged : State
     public StateLinkDamaged(PlayerControl pc, GameObject damageSource, int damage)
     {
         this.pc = pc;
-        this.damageSource = damageSource;
         this.damage = damage;
         float xOffset = damageSource.transform.position.x - pc.transform.position.x;
         float yOffset = damageSource.transform.position.y - pc.transform.position.y;
@@ -746,7 +744,6 @@ public class EnemyMoveTile : State
 public class StateEnemyDamaged : State
 {
     EnemyScript enemyObj;
-    GameObject damageSource;
     Direction knockbackDir;
     float cooldown = 15;
     bool knockBack;
@@ -754,7 +751,6 @@ public class StateEnemyDamaged : State
     public StateEnemyDamaged(EnemyScript enemyObj, GameObject damageSource, bool knockBack)
     {
         this.enemyObj = enemyObj;
-        this.damageSource = damageSource;
         this.knockBack = knockBack;
         float xOffset = damageSource.transform.position.x - enemyObj.transform.position.x;
         float yOffset = damageSource.transform.position.y - enemyObj.transform.position.y;
@@ -875,27 +871,27 @@ public class StateEnemyThrowBoomerang : State
         enemyObj.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
 
-        Vector3 direction_offset = Vector3.zero;
+        Vector3 direction_vector = Vector3.zero;
         Vector3 direction_eulerAngle = Vector3.zero;
 
         if (enemyObj.current_direction == Direction.NORTH)
         {
-            direction_offset = new Vector3(0, 1, 0);
+            direction_vector = new Vector3(0, 1, 0);
             direction_eulerAngle = new Vector3(0, 0, 90);
         }
         else if (enemyObj.current_direction == Direction.EAST)
         {
-            direction_offset = new Vector3(1, 0, 0);
+            direction_vector = new Vector3(1, 0, 0);
             direction_eulerAngle = new Vector3(0, 0, 0);
         }
         else if (enemyObj.current_direction == Direction.SOUTH)
         {
-            direction_offset = new Vector3(0, -1, 0);
+            direction_vector = new Vector3(0, -1, 0);
             direction_eulerAngle = new Vector3(0, 0, 270);
         }
         else if (enemyObj.current_direction == Direction.WEST)
         {
-            direction_offset = new Vector3(-1, 0, 0);
+            direction_vector = new Vector3(-1, 0, 0);
             direction_eulerAngle = new Vector3(0, 0, 180);
         }
 
@@ -903,11 +899,10 @@ public class StateEnemyThrowBoomerang : State
         new_weapon_rotation.eulerAngles = direction_eulerAngle;
 
         GameObject boomerang = Object.Instantiate(enemyObj.enemy_boomerang, enemyObj.transform.position, Quaternion.identity) as GameObject;
-        boomerang.transform.position += direction_offset;
         boomerang.transform.rotation = new_weapon_rotation;
         boomerang.GetComponent<EnemyBoomerangScript>().thrower = (GoriyaScript) enemyObj;
 
-        boomerang.GetComponent<Rigidbody>().velocity = direction_offset * PlayerControl.instance.boomerang_velocity;
+        boomerang.GetComponent<Rigidbody>().velocity = direction_vector * PlayerControl.instance.boomerang_velocity;
     }
 
     public override void OnUpdate(float time_delta_fraction)

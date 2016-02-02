@@ -23,6 +23,6 @@ public class BombScript : MonoBehaviour {
 
     private void Explode()
     {
-        GameObject explosion = Object.Instantiate(BombExplosion, transform.position, Quaternion.identity) as GameObject;
+        Instantiate(BombExplosion, transform.position, Quaternion.identity);
     }
 }

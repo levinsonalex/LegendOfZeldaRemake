@@ -25,7 +25,6 @@ public class bat : MonoBehaviour
 
     public nineDir curDir;
     public float curSpeed;
-    public Mode curMode;
 
     public int roomXMin;
     public int roomXMax;
@@ -55,7 +54,6 @@ public class bat : MonoBehaviour
         rig = GetComponent<Rigidbody>();
         //change later
         curDir = nineDir.N;
-        curMode = Mode.walking;
     }
 
 
@@ -72,7 +70,7 @@ public class bat : MonoBehaviour
             starting = true;
 
         }
-        else if (curMode == Mode.walking && Time.time - t > restTime)
+        else if (Time.time - t > restTime)
         {
             if (starting)
             {
@@ -174,40 +172,38 @@ public class bat : MonoBehaviour
 
 
             Vector3 newVel = Vector3.zero;
-            if (curMode == Mode.walking)
+
+            if (curDir == nineDir.N)
             {
-                if (curDir == nineDir.N)
-                {
-                    newVel = curSpeed * Vector3.up;
-                }
-                else if (curDir == nineDir.NE)
-                {
-                    newVel = curSpeed * (Vector3.up + Vector3.right);
-                }
-                else if (curDir == nineDir.E)
-                {
-                    newVel = curSpeed * Vector3.right;
-                }
-                else if (curDir == nineDir.SE)
-                {
-                    newVel = curSpeed * (Vector3.down + Vector3.right);
-                }
-                else if (curDir == nineDir.S)
-                {
-                    newVel = curSpeed * Vector3.down;
-                }
-                else if (curDir == nineDir.SW)
-                {
-                    newVel = curSpeed * (Vector3.down + Vector3.left);
-                }
-                else if (curDir == nineDir.W)
-                {
-                    newVel = curSpeed * Vector3.left;
-                }
-                else if (curDir == nineDir.NW)
-                {
-                    newVel = curSpeed * (Vector3.up + Vector3.left);
-                }
+                newVel = curSpeed * Vector3.up;
+            }
+            else if (curDir == nineDir.NE)
+            {
+                newVel = curSpeed * (Vector3.up + Vector3.right);
+            }
+            else if (curDir == nineDir.E)
+            {
+                newVel = curSpeed * Vector3.right;
+            }
+            else if (curDir == nineDir.SE)
+            {
+                newVel = curSpeed * (Vector3.down + Vector3.right);
+            }
+            else if (curDir == nineDir.S)
+            {
+                newVel = curSpeed * Vector3.down;
+            }
+            else if (curDir == nineDir.SW)
+            {
+                newVel = curSpeed * (Vector3.down + Vector3.left);
+            }
+            else if (curDir == nineDir.W)
+            {
+                newVel = curSpeed * Vector3.left;
+            }
+            else if (curDir == nineDir.NW)
+            {
+                newVel = curSpeed * (Vector3.up + Vector3.left);
             }
 
             rig.velocity = newVel;

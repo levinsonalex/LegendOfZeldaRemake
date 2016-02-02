@@ -224,6 +224,10 @@ public class PlayerControl : MonoBehaviour {
         }
         else if (!invincible && (coll.gameObject.tag == "Enemy" || coll.gameObject.tag == "EnemyWeapon"))
         {
+            if(coll.gameObject.tag == "EnemyWeapon")
+            {
+                coll.gameObject.GetComponent<BoxCollider>().enabled = false;
+            }
             int damage = 1;
             print("HIT ENEMY");
             if (coll.gameObject.name == "FinalBoss")
@@ -629,6 +633,27 @@ public class PlayerControl : MonoBehaviour {
             control_state_machine.ChangeState(new StateLinkDamaged(this, coll.gameObject, damage));
         }
         #endregion
+        else if (roomX == 3 && roomY == 2) { 
+            if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y >= 1.5)
+            {
+                print("Up");
+            }
+            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.y - transform.position.y <= -4)
+            {
+                print("DOWN");
+
+            }
+            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.x - transform.position.x >= 5)
+            {
+                print("RIGHT");
+
+            }
+            else if(GameObject.FindGameObjectWithTag("MainCamera").transform.position.x - transform.position.x <= -5)
+            {
+                print("LEFT");
+
+            }
+        }
         else
         {
             print(coll.collider.name);
@@ -650,7 +675,9 @@ public class PlayerControl : MonoBehaviour {
                 x == -1 && y == 2 ||
                 x == -1 && y == 3 ||
                 x ==  0 && y == 3 ||
-                x ==  0 && y == 4)
+                x ==  0 && y == 4 ||
+                x ==  0 && y == 5 ||
+                x ==  1 && y == 3)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if (roomObject)
@@ -668,7 +695,6 @@ public class PlayerControl : MonoBehaviour {
 	{
         if (!customMap)
         {
-            string roomString = string.Format("{0:000}x{1:000}y", x, y);
             if (x ==  1 && y == 0 ||
                 x == -1 && y == 0 ||
                 x ==  0 && y == 1 ||
@@ -677,7 +703,9 @@ public class PlayerControl : MonoBehaviour {
                 x == -1 && y == 2 ||
                 x == -1 && y == 3 ||
                 x ==  0 && y == 3 ||
-                x == 0 && y == 4)
+                x ==  0 && y == 4 ||
+                x ==  0 && y == 5 ||
+                x ==  1 && y == 3)
             {
                 GameObject roomObject = GameObject.Find(string.Format("{0:000}x{1:000}y", x, y));
                 if(roomObject)
@@ -686,7 +714,15 @@ public class PlayerControl : MonoBehaviour {
                     {
                         enemy.SetActive(true);
                     }
+                    if (roomObject.GetComponent<RoomScript>().unlock != null)
+                    {
+                        roomObject.GetComponent<RoomScript>().unlock.SetActive(true);
+                    }
                 }
+            }
+            if (x == 0 && y == 5)
+            {
+                GameObject.Find("044x062").GetComponent<BoxCollider>().isTrigger = false;
             }
             if (doorUnlocked0x0)
             {

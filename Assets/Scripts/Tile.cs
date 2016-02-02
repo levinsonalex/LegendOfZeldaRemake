@@ -112,6 +112,7 @@ public class Tile : MonoBehaviour {
             bc.size = Vector3.one;
             bc.gameObject.tag = "Flyable";
             bc.gameObject.layer = 10;
+            bc.isTrigger = false;
         }
         else if (c == 'S') // Solid
         {
