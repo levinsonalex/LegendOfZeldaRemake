@@ -175,12 +175,15 @@ public class PlayerControl : MonoBehaviour {
             Destroy(coll.gameObject);
             hasMap = true;
             Hud.instance.Map_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
+			Hud.instance.Level_Map.gameObject.SetActive(true);
         }
         else if (coll.gameObject.tag == "Compass")
         {
             Destroy(coll.gameObject);
             hasCompass = true;
             Hud.instance.Compass_Inv.GetComponent<Image>().color = new Color(1, 1, 1);
+			Hud.instance.Red_Dot.gameObject.SetActive(true);
+			Hud.instance.Red_Dot.GetComponent<FlashLight>().flash();
         }
         else if (coll.gameObject.tag == "Bow")
         {

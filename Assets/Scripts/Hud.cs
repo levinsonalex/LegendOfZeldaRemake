@@ -10,6 +10,8 @@ public class Hud : MonoBehaviour {
 	public Text Key_Text;
 	public Text Heart_Text;
     public Text Bomb_Text;
+	public Image Level_Map;
+	public Image Red_Dot;
     public GameObject Compass_Inv;
     public GameObject Map_Inv;
     public GameObject Sword_Inv;
